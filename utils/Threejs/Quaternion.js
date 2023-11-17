@@ -267,7 +267,6 @@ class Quaternion {
         }
 
         if (update !== false) this._onChangeCallback();
-        console.log(this);
         return this;
 
     }

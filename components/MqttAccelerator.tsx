@@ -12,11 +12,7 @@ import CancelButton from "./CancelButton";
 
 type HomeProps = NativeStackScreenProps<ParamList, 'MqttMessagerScreenForAccelerometer'>
 
-type Acceleration = {
-    x: number,
-    y: number,
-    z: number
-}
+type Acceleration = [number, number, number];
 
 type Payload = {
     timestamp: string,
@@ -26,7 +22,7 @@ type Payload = {
 
 export default function Mqtt({ navigation, route }: HomeProps) {
 
-    const [accel, setAccel] = useState<Acceleration>({ x: 0, y: 0, z: 0 });
+    const [accel, setAccel] = useState<Acceleration>([0, 0, 0]);
 
     const client: Paho.Client = route.params.client;
 
@@ -44,7 +40,7 @@ export default function Mqtt({ navigation, route }: HomeProps) {
         //cada 1/25 segundos envia el mensaje si esta conectado
         const samplingRate = route.params.sampleRate || 20;
         Accelerometer.setUpdateInterval(1000 / samplingRate);
-        setSubscribtion(Accelerometer.addListener((data: AccelerometerMeasurement) => setAccel({ x: data.x, y: data.y, z: data.z })));
+        setSubscribtion(Accelerometer.addListener((data: AccelerometerMeasurement) => setAccel([data.x, data.y, data.z])));
 
     }
 
@@ -69,7 +65,9 @@ export default function Mqtt({ navigation, route }: HomeProps) {
 
     function getTimestamp() {
         let date = new Date();
-        let _timestamp = date.getFullYear().toString() + '-' + date.getMonth().toString() + '-' + date.getDay().toString() + 'T ' + date.getHours().toString() + ':' + date.getMinutes().toString() + ':' + date.getSeconds().toString() + date.getMilliseconds() / 1000 + 'Z';
+        //let _timestamp = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDay() + 'T ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + (date.getMilliseconds() / 1000) + 'Z';
+        let _timestamp = date.toJSON();
+        console.log(_timestamp);
         setTimestamp(_timestamp);
     }
 
@@ -81,9 +79,9 @@ export default function Mqtt({ navigation, route }: HomeProps) {
 
             <View>
                 <View style={styles.textcontainer} >
-                    <Text style={styles.label}>x: {(accel.x)} </Text>
-                    <Text style={styles.label}>y: {(accel.y)} </Text>
-                    <Text style={styles.label}>z: {(accel.z)} </Text>
+                    <Text style={styles.label}>x: {(accel[0])} </Text>
+                    <Text style={styles.label}>y: {(accel[1])} </Text>
+                    <Text style={styles.label}>z: {(accel[2])} </Text>
                     <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: 10 }}>
                         <CancelButton navigation={navigation} />
                         <TouchableOpacity onPress={handleSend} style={[styles.button, { width: '45%' }]}  >

@@ -31,25 +31,33 @@ export default function Mqtt({ navigation, route }: HomeProps) {
 
     var message = new Paho.Message(quaternion.toString());
     const [timestamp, setTimestamp] = useState<string>();
-
+    var counter: number = 0;
+    var progress: number = 0;
     const [subscribtion, setSubscribtion] = useState<Subscription | null>(null);
     var payload: Payload = ({ timestamp: '', mobile_quaternion: new Quaternion(0, 0, 0, 1) });
+    const recordingTime = route.params.recordingTime || 10;
 
     const handleSend = () => {
         const samplingRate = route.params.sampleRate || 20;
         Gyroscope.setUpdateInterval(1000 / samplingRate);
         setSubscribtion(Gyroscope.addListener((data: GyroscopeMeasurement) => setEuler(new Euler(data.x, data.y, data.z, 'YXZ'))));
-
+        setTimeout(() => {
+            unsubscribe();
+        }, recordingTime * 1000);
     }
 
+
+
     useEffect(() => {
-        if (client.isConnected()) {
+        if (client.isConnected() && subscribtion) {
             getQuaternion();
             getTimestamp();
             payload = ({ timestamp: timestamp!, mobile_quaternion: quaternion });
             message = new Paho.Message(JSON.stringify(payload));
             message.destinationName = route.params.topic as string;
             client.send(message);
+            counter += (1 / route.params.sampleRate!);
+            progress = (counter / recordingTime) * 100;
 
         }
     }, [euler])
@@ -58,7 +66,6 @@ export default function Mqtt({ navigation, route }: HomeProps) {
         subscribtion && subscribtion.remove();
         setSubscribtion(null);
     }
-
 
 
     function getQuaternion() {
@@ -73,7 +80,7 @@ export default function Mqtt({ navigation, route }: HomeProps) {
         setTimestamp(_timestamp);
     }
 
-    const onDisconnect = () => {
+    function onDisconnect() {
         unsubscribe();
     }
 
@@ -95,6 +102,10 @@ export default function Mqtt({ navigation, route }: HomeProps) {
                     </TouchableOpacity>
 
                 </View>
+
+            </View>
+            <View style={{ width: '80%', height: '3%', borderWidth: 1, borderColor: 'red', marginTop: 10, borderRadius: 20 }}>
+                <View style={{ width: `${progress}%`, height: '100%', backgroundColor: 'red', borderRadius: 20 }}></View>
             </View>
 
         </View>

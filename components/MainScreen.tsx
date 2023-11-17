@@ -79,6 +79,7 @@ export default function Example({ route, navigation }: MainScreenProps) {
         if (topics.length > 0) {
             handleConnect();
             setSelectedOrganization(topics[0].orgAcronym);
+            console.log('topics: ', topics);
         }
     }, [topics])
 
@@ -104,6 +105,12 @@ export default function Example({ route, navigation }: MainScreenProps) {
     useEffect(() => {
         setTopicString(`${topicType}/Group_${groupHash}/Topic_${topicHash}`);
     }, [topicHash, groupHash, topicType])
+
+    useEffect(() => {
+        if (selectedSensor) {
+            SetValues(ChangedValue.Sensor, selectedSensor, topics, setSelectedMobileDevice);
+        }
+    }, [selectedSensor])
 
     const SetValues = (changedValue: ChangedValue, value: string, localtopics: TopicType[], setNextValue: React.Dispatch<SetStateAction<string>>, compareValueArr?: Sensor[]) => {
 
@@ -135,7 +142,8 @@ export default function Example({ route, navigation }: MainScreenProps) {
                 break;
             case ChangedValue.Sensor:
                 localtopics.forEach((topic: TopicType) => {
-                    if (topic.sensorType == value.toLocaleLowerCase()) {
+                    if (topic.sensorType == value.toLocaleLowerCase() && selectedGroup == topic.groupAcronym) {
+                        console.log('topicId: ', topic.id);
                         setNextValue('Asset_' + topic.assetUid);
                         setGroupHash(topic.groupUid);
                         setTopicHash(topic.topicUid);
