@@ -9,7 +9,7 @@ import { GetData } from '../utils/GetData';
 import OptionsPicker, { optionKeys } from './OptionsPicker';
 import { Picker } from '@react-native-picker/picker';
 import HeaderComponent from './Generics/Header';
-
+import * as Location from 'expo-location';
 enum ChangedValue {
     'OrganizationAcronym',
     'GroupAcronym',
@@ -35,7 +35,8 @@ export default function Example({ route, navigation }: MainScreenProps) {
 
     const [sensors, setSensors] = useState<Sensor[]>([
         { name: 'Accelerometer', sensor: Accelerometer },
-        { name: 'Quaternion', sensor: Gyroscope }
+        { name: 'Quaternion', sensor: Gyroscope },
+        { name: 'Geolocation', sensor: Location }
     ]);
 
 
@@ -79,7 +80,6 @@ export default function Example({ route, navigation }: MainScreenProps) {
         if (topics.length > 0) {
             handleConnect();
             setSelectedOrganization(topics[0].orgAcronym);
-            console.log('topics: ', topics);
         }
     }, [topics])
 
@@ -189,6 +189,7 @@ export default function Example({ route, navigation }: MainScreenProps) {
                             <Picker.Item label='Select an option' value={`Select an option`} />
                             <Picker.Item label='Accelerometer' value={`Accelerometer`} />
                             <Picker.Item label='Gyroscope' value={`Quaternion`} />
+                            <Picker.Item label='Geolocation' value={`Geolocation`} />
                         </Picker>
                         <TouchableOpacity style={[styles.button]} onPress={handleClick}  >
                             <Text style={styles.textbutton} >Next</Text>

@@ -34,6 +34,15 @@
       "eas": {
         "projectId": "54f49048-d3f2-45bb-b3e3-d452eb17efa9"
       }
-    }
+    },
+    "plugins": [
+      [
+        "expo-sensors",
+        {
+          "motionPermission": "Allow $(PRODUCT_NAME) to access your device motion.",
+          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to always access your location."
+        }
+      ]
+    ]
   }
 }

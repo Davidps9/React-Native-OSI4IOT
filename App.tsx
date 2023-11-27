@@ -7,6 +7,7 @@ import Mqtt from './components/MqttGyroscope';
 import { ParamList } from './types';
 import { MqttForm } from './components/MqttForm';
 import MqttAccelerator from './components/MqttAccelerator';
+import MqttGeolocation from './components/MqttGeolocation';
 
 
 
@@ -21,6 +22,7 @@ export default function App() {
         <Stack.Screen name='TimeSelectorScreen' component={MqttForm} options={{ headerShown: false }} />
         <Stack.Screen name="MqttMessagerScreenForGyrosope" component={Mqtt} options={{ headerShown: false }} />
         <Stack.Screen name="MqttMessagerScreenForAccelerometer" component={MqttAccelerator} options={{ headerShown: false }} />
+        <Stack.Screen name="MqttMessagerScreenForGeolocation" component={MqttGeolocation} options={{ headerShown: false }} />
       </Stack.Navigator>
     </NavigationContainer>
   );

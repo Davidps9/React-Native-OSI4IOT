@@ -1,7 +1,7 @@
-import React, { SetStateAction, useState } from 'react';
+import React, { SetStateAction, useEffect, useState } from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { ParamList } from '../types';
-import { Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { LogBox, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import styles from '../Styles/styles';
 import Header from './Generics/Header';
 import HeaderComponent from './Generics/Header';
@@ -15,6 +15,8 @@ export function MqttForm({ navigation, route }: MainscreenProps) {
     const [recordingTime, setRecordingTime] = useState<string>('25');
     const [alert, setAlert] = useState<boolean>(false);
 
+    LogBox.ignoreLogs(['Non-serializable values were found in the navigation state',]);
+
     const handleClick = () => {
         if (parseFloat(samplingRate.toString()) > 0 && parseFloat(recordingTime.toString()) > 0) {
             switch (route.params.sensor) {
@@ -24,6 +26,9 @@ export function MqttForm({ navigation, route }: MainscreenProps) {
                     break;
                 case 'Quaternion':
                     navigation.navigate('MqttMessagerScreenForGyrosope', { ...route.params, sampleRate: parseFloat(samplingRate), recordingTime: parseFloat(recordingTime) })
+                    break;
+                case 'Geolocation':
+                    navigation.navigate('MqttMessagerScreenForGeolocation', { ...route.params, sampleRate: parseFloat(samplingRate), recordingTime: parseFloat(recordingTime) })
                     break;
                 default:
                     console.log(route.params.sensor)

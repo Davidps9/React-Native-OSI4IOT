@@ -25,7 +25,7 @@ export default function Mqtt({ navigation, route }: HomeProps) {
     const [accel, setAccel] = useState<Acceleration>([0, 0, 0]);
 
     const client: Paho.Client = route.params.client;
-
+    const recordingTime = route.params.recordingTime || 10;
     var message = new Paho.Message(accel.toString());
     const [timestamp, setTimestamp] = useState<string>();
 
@@ -34,14 +34,12 @@ export default function Mqtt({ navigation, route }: HomeProps) {
 
     const handleSend = () => {
 
-        console.log('topic: ', route.params.topic)
-        console.log('user: ', route.params.userName)
-        console.log('password: ', route.params.password)
-        //cada 1/25 segundos envia el mensaje si esta conectado
         const samplingRate = route.params.sampleRate || 20;
         Accelerometer.setUpdateInterval(1000 / samplingRate);
         setSubscribtion(Accelerometer.addListener((data: AccelerometerMeasurement) => setAccel([data.x, data.y, data.z])));
-
+        setTimeout(() => {
+            unsubscribe();
+        }, recordingTime * 1000);
     }
 
     useEffect(() => {
@@ -51,7 +49,6 @@ export default function Mqtt({ navigation, route }: HomeProps) {
             message = new Paho.Message(JSON.stringify(payload));
             message.destinationName = route.params.topic as string;
             client.send(message);
-            console.log("onMessageArrived:" + message.payloadString);
 
         }
     }, [accel])
@@ -65,9 +62,7 @@ export default function Mqtt({ navigation, route }: HomeProps) {
 
     function getTimestamp() {
         let date = new Date();
-        //let _timestamp = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDay() + 'T ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + (date.getMilliseconds() / 1000) + 'Z';
         let _timestamp = date.toJSON();
-        console.log(_timestamp);
         setTimestamp(_timestamp);
     }
 

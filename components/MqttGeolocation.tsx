@@ -1,68 +1,72 @@
-import { Pressable, Text, TouchableOpacity, View } from "react-native"
-import styles from "../Styles/styles";
-import Paho from 'paho-mqtt';
 import { useEffect, useState } from "react";
-import { DeviceMotion, DeviceMotionMeasurement } from "expo-sensors";
+import { View, Text, TouchableOpacity } from "react-native";
 import { Subscription } from "expo-sensors/build/Pedometer";
-import { Quaternion } from "../utils/Threejs/Quaternion";
-import { Euler } from "../utils/Threejs/Euler";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { ParamList, PayloadForQuaternion } from "../types";
+import { GeolocotationType, ParamList, PayloadForLocation } from "../types";
+import Paho from "paho-mqtt";
+import styles from "../Styles/styles";
 import Header from "./Generics/Header";
 import CancelButton from "./CancelButton";
 import ProgressBar from "./Generics/ProgressBar";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import *  as Location from 'expo-location';
 
-type HomeProps = NativeStackScreenProps<ParamList, 'MqttMessagerScreenForGyrosope'>
+type HomeProps = NativeStackScreenProps<ParamList, 'MqttMessagerScreenForGeolocation'>
 
-
-export default function Mqtt({ navigation, route }: HomeProps) {
-
+export default function MqttGeolocation({ navigation, route }: HomeProps) {
     const [subscribtion, setSubscribtion] = useState<Subscription | null>(null);
-    const [euler, setEuler] = useState<Euler>(new Euler(0, 0, 0, 'YXZ'));
-    const [quaternion, setQuaternion] = useState<Quaternion>(new Quaternion(0, 0, 0, 0));
     const [connected, setConnected] = useState<boolean>(false);
     const samplingRate = route.params.sampleRate || 20;
+    const [location, setLocation] = useState<GeolocotationType>([0, 0]);
     const client: Paho.Client = route.params.client;
     const [timestamp, setTimestamp] = useState<string>();
     const [counter, setCounter] = useState<number>(0);
 
-    const payload: PayloadForQuaternion = ({ timestamp: '', mobile_quaternion: new Quaternion(0, 0, 0, 1) });
+    const payload: PayloadForLocation = ({ timestamp: '', mobile_geolocation: { latitude: 0, longitude: 0 } });
     const recordingTime = route.params.recordingTime || 10;
 
     const handleSend = () => {
-        DeviceMotion.setUpdateInterval(1000 / samplingRate); DeviceMotion.addListener(({ rotation }: DeviceMotionMeasurement) => setEuler(new Euler(rotation.beta!, rotation.gamma!, rotation.alpha!, 'ZXY')))
+        (async () => {
+            const { status } = await Location.requestForegroundPermissionsAsync();
+            if (status !== 'granted') {
+                return;
+            }
+            const wathclocation = await Location.watchPositionAsync({
+                timeInterval: 1000 / samplingRate,
+                accuracy: Location.Accuracy.Highest
+            }, (location) => {
+                console.log('location ', location);
+                const { latitude, longitude } = location.coords;
+                setLocation([latitude, longitude]);
+            });
+            setSubscribtion(wathclocation);
+
+        })();
         setConnected(true);
         setTimeout(() => {
             onDisconnect();
-            DeviceMotion.removeAllListeners();
         }, recordingTime * 1000);
     }
 
     useEffect(() => {
         if (connected) {
 
-            getQuaternion();
             getTimestamp();
+            console.log(timestamp)
             payload.timestamp = timestamp as string;
-            payload.mobile_quaternion = quaternion;
+            payload.mobile_geolocation.latitude = location[0];
+            payload.mobile_geolocation.longitude = location[1];
             const message = new Paho.Message(JSON.stringify(payload));
             message.destinationName = route.params.topic as string;
             client.send(message);
+            console.log(payload)
             setCounter(counter + (1 / route.params.sampleRate!));
         }
-    }, [euler])
+    }, [location])
 
 
     const unsubscribe = () => {
         subscribtion && subscribtion.remove();
         setSubscribtion(null);
-    }
-
-
-    function getQuaternion() {
-        const newQuaternion: Quaternion = quaternion;
-        newQuaternion.setFromEuler(euler);
-        setQuaternion(newQuaternion);
     }
 
     function getTimestamp() {
@@ -80,10 +84,8 @@ export default function Mqtt({ navigation, route }: HomeProps) {
             <Header route={route} navigation={navigation} />
             <Text style={styles.label}>Gyroscope Data</Text>
             <View style={styles.textcontainer} >
-                <Text style={styles.label}>x: {quaternion._x} </Text>
-                <Text style={styles.label}>y: {quaternion._y} </Text>
-                <Text style={styles.label}>z: {quaternion._z} </Text>
-                <Text style={styles.label}>w: {quaternion._w} </Text>
+                <Text style={styles.label}>x: {location[0]} </Text>
+                <Text style={styles.label}>y: {location[1]} </Text>
                 <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: 10 }}>
                     <CancelButton navigation={navigation} />
 

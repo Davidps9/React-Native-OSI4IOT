@@ -4,7 +4,27 @@ export type ParamList = {
     TimeSelectorScreen: ScreenProps,
     MqttMessagerScreenForGyrosope: ScreenProps,
     MqttMessagerScreenForAccelerometer: ScreenProps,
+    MqttMessagerScreenForGeolocation: ScreenProps,
 };
+
+export type PayloadForQuaternion = {
+    timestamp: string,
+    mobile_quaternion: Quaternion
+
+}
+export type PayloadForLocation = {
+    timestamp: string,
+    mobile_geolocation: {
+        latitude: number,
+        longitude: number,
+    }
+
+}
+
+type GeolocotationType = [
+    latitude: number,
+    longitude: number,
+]
 
 export type ScreenProps = {
 
