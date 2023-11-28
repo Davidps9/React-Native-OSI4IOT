@@ -1,6 +1,6 @@
 import { Text, TouchableOpacity } from "react-native"
-import styles from "../Styles/styles"
-import { DefaultScreenProps } from "../types"
+import styles from "../../Styles/styles"
+import { DefaultScreenProps } from "../../types"
 
 
 export default function CancelButton({ navigation }: DefaultScreenProps) {

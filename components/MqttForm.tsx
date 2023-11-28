@@ -5,7 +5,8 @@ import { LogBox, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import styles from '../Styles/styles';
 import Header from './Generics/Header';
 import HeaderComponent from './Generics/Header';
-import CancelButton from './CancelButton';
+import CancelButton from './Generics/CancelButton';
+import SendButton from './Generics/SendButton';
 
 
 type MainscreenProps = NativeStackScreenProps<ParamList, 'TimeSelectorScreen'>
@@ -62,12 +63,10 @@ export function MqttForm({ navigation, route }: MainscreenProps) {
                 <TextInput style={styles.textInput} keyboardType='numeric' onChangeText={(text) => { onCheckTextInput(setRecordingTime, text) }} value={recordingTime} />
                 <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                     <CancelButton navigation={navigation} />
-                    <TouchableOpacity style={[styles.button, { width: '45%' }]} onPress={handleClick}  >
-                        <Text style={styles.textbutton} >Next</Text>
-                    </TouchableOpacity>
+                    <SendButton text="Next" width={45} handleSend={handleClick} />
                 </View>
             </View>
-            <Text style={alert ? { color: 'red', fontSize: 14, margin: 5, } : { display: 'none', }}>Recording time and Sampling rate can not be 0, or negative</Text>
+            {alert ? <Text style={{ color: 'red', fontSize: 14, margin: 5, }}>Recording time and Sampling rate can not be 0, or negative</Text> : null}
 
         </View>
     )

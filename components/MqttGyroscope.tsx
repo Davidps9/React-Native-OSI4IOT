@@ -9,8 +9,9 @@ import { Euler } from "../utils/Threejs/Euler";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ParamList, PayloadForQuaternion } from "../types";
 import Header from "./Generics/Header";
-import CancelButton from "./CancelButton";
+import CancelButton from "./Generics/CancelButton";
 import ProgressBar from "./Generics/ProgressBar";
+import SendButton from "./Generics/SendButton";
 
 type HomeProps = NativeStackScreenProps<ParamList, 'MqttMessagerScreenForGyrosope'>
 
@@ -30,17 +31,16 @@ export default function Mqtt({ navigation, route }: HomeProps) {
     const recordingTime = route.params.recordingTime || 10;
 
     const handleSend = () => {
-        DeviceMotion.setUpdateInterval(1000 / samplingRate); DeviceMotion.addListener(({ rotation }: DeviceMotionMeasurement) => setEuler(new Euler(rotation.beta!, rotation.gamma!, rotation.alpha!, 'ZXY')))
+        DeviceMotion.setUpdateInterval(1000 / samplingRate); DeviceMotion.addListener(({ rotation }: DeviceMotionMeasurement) => setEuler(new Euler(rotation.beta as number, rotation.gamma as number, rotation.alpha as number, 'ZXY')))
         setConnected(true);
         setTimeout(() => {
-            onDisconnect();
+            unsubscribe();
             DeviceMotion.removeAllListeners();
         }, recordingTime * 1000);
     }
 
     useEffect(() => {
         if (connected) {
-
             getQuaternion();
             getTimestamp();
             payload.timestamp = timestamp as string;
@@ -70,9 +70,7 @@ export default function Mqtt({ navigation, route }: HomeProps) {
         setTimestamp(date.toJSON());
     }
 
-    function onDisconnect() {
-        unsubscribe();
-    }
+
 
 
     return (
@@ -87,9 +85,7 @@ export default function Mqtt({ navigation, route }: HomeProps) {
                 <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: 10 }}>
                     <CancelButton navigation={navigation} />
 
-                    <TouchableOpacity onPress={handleSend} style={[styles.button, { width: '45%' }]}  >
-                        <Text style={styles.textbutton} >Send</Text>
-                    </TouchableOpacity>
+                    <SendButton width={45} text="Send" handleSend={handleSend} />
 
                 </View>
 

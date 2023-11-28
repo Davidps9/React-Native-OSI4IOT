@@ -1,3 +1,5 @@
+import * as Location from 'expo-location';
+
 export type ParamList = {
     Home: ScreenProps,
     MainScreen: ScreenProps,
@@ -14,16 +16,14 @@ export type PayloadForQuaternion = {
 }
 export type PayloadForLocation = {
     timestamp: string,
-    mobile_geolocation: {
-        latitude: number,
-        longitude: number,
-    }
+    mobile_geolocation: GeolocotationType
+
 
 }
 
 type GeolocotationType = [
-    latitude: number,
     longitude: number,
+    latitude: number,
 ]
 
 export type ScreenProps = {
@@ -79,7 +79,8 @@ export type TopicType = {
 }
 export type Sensor = {
     name: string,
-    sensor: typeof Accelerometer | typeof Gyroscope,
+    sensor: typeof Accelerometer | typeof Gyroscope | typeof Location,
+    sensorType: string,
 }
 
 

@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { ParamList } from '../types';
 import styles from '../Styles/styles';
+import SendButton from './Generics/SendButton';
 
 const img_url: ImageSourcePropType = require('../assets/logo_large.png')
 const bg_url: ImageSourcePropType = require('../assets/osi4iot_fond.jpg')
@@ -76,9 +77,7 @@ export default function Form({ navigation }: HomeProps) {
 					<TextInput style={styles.textInput} onChangeText={(text) => { setName(text) }} value={name} placeholder='John Whick' placeholderTextColor={'grey'} />
 					<Text style={styles.label} >Password</Text>
 					<TextInput style={styles.textInput} onChangeText={(text) => { setPassword(text) }} value={password} placeholder='safe-password' placeholderTextColor={'grey'} secureTextEntry={true} />
-					<TouchableOpacity style={styles.button} onPressIn={handleClick} >
-						<Text style={styles.textbutton}>SIGN IN</Text>
-					</TouchableOpacity>
+					<SendButton text='Sign In' width={100} handleSend={handleClick} />
 				</View>
 				<Text style={logInMessage ? { color: 'red', fontSize: 14, margin: 5, } : { display: 'none', }}>User name, password or platform domain are incorrect</Text>
 			</View>

@@ -10,6 +10,7 @@ import OptionsPicker, { optionKeys } from './OptionsPicker';
 import { Picker } from '@react-native-picker/picker';
 import HeaderComponent from './Generics/Header';
 import * as Location from 'expo-location';
+import SendButton from './Generics/SendButton';
 enum ChangedValue {
     'OrganizationAcronym',
     'GroupAcronym',
@@ -21,11 +22,7 @@ enum ChangedValue {
 
 type MainScreenProps = NativeStackScreenProps<ParamList, 'MainScreen'>
 
-export default function Example({ route, navigation }: MainScreenProps) {
-
-
-
-
+export default function MainScreen({ route, navigation }: MainScreenProps) {
     const { accessToken } = route.params;
 
     const [selectedOrganization, setSelectedOrganization] = useState<string>('');
@@ -34,9 +31,9 @@ export default function Example({ route, navigation }: MainScreenProps) {
     const [selectedGroup, setSelectedGroup] = useState<string>('');
 
     const [sensors, setSensors] = useState<Sensor[]>([
-        { name: 'Accelerometer', sensor: Accelerometer },
-        { name: 'Quaternion', sensor: Gyroscope },
-        { name: 'Geolocation', sensor: Location }
+        { name: 'Accelerometer', sensor: Accelerometer, sensorType: 'accelerations' },
+        { name: 'Quaternion', sensor: Gyroscope, sensorType: 'orientation' },
+        { name: 'Geolocation', sensor: Location, sensorType: 'geolocation' }
     ]);
 
 
@@ -108,7 +105,8 @@ export default function Example({ route, navigation }: MainScreenProps) {
 
     useEffect(() => {
         if (selectedSensor) {
-            SetValues(ChangedValue.Sensor, selectedSensor, topics, setSelectedMobileDevice);
+            const index = sensors.findIndex((sensor: Sensor) => sensor.name == selectedSensor);
+            SetValues(ChangedValue.Sensor, sensors[index].sensorType, topics, setSelectedMobileDevice);
         }
     }, [selectedSensor])
 
@@ -132,7 +130,7 @@ export default function Example({ route, navigation }: MainScreenProps) {
             case ChangedValue.Device:
                 localtopics.forEach((topic: TopicType) => {
                     compareValueArr?.forEach((sensor: Sensor) => {
-                        if (compareValueArr != undefined && value.includes(topic.assetUid) && sensor.name.toLocaleLowerCase() == topic.sensorType && selectedGroup == topic.groupAcronym) {
+                        if (compareValueArr != undefined && value.includes(topic.assetUid) && topic.sensorType.includes(sensor.name.toLocaleLowerCase()) && selectedGroup == topic.groupAcronym) {
                             setNextValue(sensor.name);
                             setGroupHash(topic.groupUid);
                             setTopicHash(topic.topicUid);
@@ -142,13 +140,14 @@ export default function Example({ route, navigation }: MainScreenProps) {
                 break;
             case ChangedValue.Sensor:
                 localtopics.forEach((topic: TopicType) => {
-                    if (topic.sensorType == value.toLocaleLowerCase() && selectedGroup == topic.groupAcronym) {
+                    if (topic.sensorType.includes(value) && selectedGroup == topic.groupAcronym) {
                         console.log('topicId: ', topic.id);
                         setNextValue('Asset_' + topic.assetUid);
                         setGroupHash(topic.groupUid);
                         setTopicHash(topic.topicUid);
                     }
                 })
+                break;
         }
 
     }
@@ -191,9 +190,7 @@ export default function Example({ route, navigation }: MainScreenProps) {
                             <Picker.Item label='Gyroscope' value={`Quaternion`} />
                             <Picker.Item label='Geolocation' value={`Geolocation`} />
                         </Picker>
-                        <TouchableOpacity style={[styles.button]} onPress={handleClick}  >
-                            <Text style={styles.textbutton} >Next</Text>
-                        </TouchableOpacity>
+                        <SendButton text='Next' width={100} handleSend={handleClick} />
                     </>
                     :
 

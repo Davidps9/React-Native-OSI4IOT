@@ -7,7 +7,8 @@ import Paho from "paho-mqtt";
 import { View, Text, Pressable, TouchableOpacity } from "react-native";
 import styles from "../Styles/styles";
 import Header from "./Generics/Header";
-import CancelButton from "./CancelButton";
+import CancelButton from "./Generics/CancelButton";
+import SendButton from "./Generics/SendButton";
 
 
 type HomeProps = NativeStackScreenProps<ParamList, 'MqttMessagerScreenForAccelerometer'>
@@ -30,7 +31,7 @@ export default function Mqtt({ navigation, route }: HomeProps) {
     const [timestamp, setTimestamp] = useState<string>();
 
     const [subscribtion, setSubscribtion] = useState<Subscription | null>(null);
-    var payload: Payload = ({ timestamp: '', mobile_accelerations: accel });
+    const payload: Payload = ({ timestamp: '', mobile_accelerations: accel });
 
     const handleSend = () => {
 
@@ -45,11 +46,11 @@ export default function Mqtt({ navigation, route }: HomeProps) {
     useEffect(() => {
         if (client.isConnected()) {
             getTimestamp();
-            payload = ({ timestamp: timestamp!, mobile_accelerations: accel });
+            payload.timestamp = timestamp!;
+            payload.mobile_accelerations = accel;
             message = new Paho.Message(JSON.stringify(payload));
             message.destinationName = route.params.topic as string;
             client.send(message);
-
         }
     }, [accel])
 
@@ -58,12 +59,9 @@ export default function Mqtt({ navigation, route }: HomeProps) {
         setSubscribtion(null);
     }
 
-
-
     function getTimestamp() {
         let date = new Date();
-        let _timestamp = date.toJSON();
-        setTimestamp(_timestamp);
+        setTimestamp(date.toJSON());
     }
 
 
@@ -79,9 +77,7 @@ export default function Mqtt({ navigation, route }: HomeProps) {
                     <Text style={styles.label}>z: {(accel[2])} </Text>
                     <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: 10 }}>
                         <CancelButton navigation={navigation} />
-                        <TouchableOpacity onPress={handleSend} style={[styles.button, { width: '45%' }]}  >
-                            <Text style={styles.textbutton} >Send</Text>
-                        </TouchableOpacity>
+                        <SendButton text="Send" width={45} handleSend={handleSend} />
                     </View>
                 </View>
             </View>
