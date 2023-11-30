@@ -141,10 +141,11 @@ export default function MainScreen({ route, navigation }: MainScreenProps) {
             case ChangedValue.Sensor:
                 localtopics.forEach((topic: TopicType) => {
                     if (topic.sensorType.includes(value) && selectedGroup == topic.groupAcronym) {
-                        console.log('topicId: ', topic.id);
+                        console.log('topicId: ', topic.description);
                         setNextValue('Asset_' + topic.assetUid);
                         setGroupHash(topic.groupUid);
                         setTopicHash(topic.topicUid);
+
                     }
                 })
                 break;
@@ -157,6 +158,7 @@ export default function MainScreen({ route, navigation }: MainScreenProps) {
 
         if (mqttClient?.isConnected() && selectedSensor) {
             console.log('topic: ', topicString);
+
             navigation.navigate('TimeSelectorScreen', { ...route.params, topic: topicString, client: mqttClient, sensor: selectedSensor })
         }
 

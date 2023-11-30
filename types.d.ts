@@ -15,16 +15,12 @@ export type PayloadForQuaternion = {
 
 }
 export type PayloadForLocation = {
-    timestamp: string,
-    mobile_geolocation: GeolocotationType
-
-
-}
-
-type GeolocotationType = [
     longitude: number,
     latitude: number,
-]
+    timestamp: string,
+}
+
+
 
 export type ScreenProps = {
 

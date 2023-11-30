@@ -62,6 +62,7 @@ export default function Mqtt({ navigation, route }: HomeProps) {
     function getTimestamp() {
         let date = new Date();
         setTimestamp(date.toJSON());
+        console.log('timestamp', timestamp);
     }
 
 
