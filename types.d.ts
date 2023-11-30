@@ -37,6 +37,7 @@ export type ScreenProps = {
     sampleRate?: number,
     recordingTime?: number,
     client?: any,
+    distanceInterval?: number,
 }
 type DigitalTwinProps = {
     index: number,

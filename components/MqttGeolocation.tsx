@@ -25,7 +25,6 @@ export default function MqttGeolocation({ navigation, route }: HomeProps) {
     const recordingTime = route.params.recordingTime || 10;
 
     const handleSend = () => {
-        console.log('topic ', route.params.topic);
         (async () => {
             const { status } = await Location.requestForegroundPermissionsAsync();
             if (status !== 'granted') {
@@ -33,7 +32,8 @@ export default function MqttGeolocation({ navigation, route }: HomeProps) {
             }
             const wathclocation = await Location.watchPositionAsync({
                 timeInterval: 1000 / samplingRate,
-                accuracy: Location.Accuracy.Highest
+                accuracy: Location.Accuracy.Highest,
+                distanceInterval: route.params.distanceInterval || 1,
             }, (location) => {
                 const { latitude, longitude } = location.coords;
                 setLocation({ latitude: latitude, longitude: longitude });
