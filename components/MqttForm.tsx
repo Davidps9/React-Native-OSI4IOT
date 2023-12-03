@@ -13,7 +13,7 @@ type MainscreenProps = NativeStackScreenProps<ParamList, 'TimeSelectorScreen'>
 export function MqttForm({ navigation, route }: MainscreenProps) {
     const [samplingRate, setSamplingRate] = useState<string>('20');
     const [recordingTime, setRecordingTime] = useState<string>('25');
-    const [distanceInterval, setDistanceInterval] = useState<string>('0');
+    const [distanceInterval, setDistanceInterval] = useState<string>('1');
     const [alert, setAlert] = useState<boolean>(false);
 
     LogBox.ignoreLogs(['Non-serializable values were found in the navigation state',]);
@@ -30,6 +30,9 @@ export function MqttForm({ navigation, route }: MainscreenProps) {
                     break;
                 case 'Geolocation':
                     navigation.navigate('MqttMessagerScreenForGeolocation', { ...route.params, sampleRate: parseFloat(samplingRate), recordingTime: parseFloat(recordingTime), distanceInterval: parseFloat(distanceInterval) })
+                    break;
+                case 'Motion':
+                    navigation.navigate('MqttMessagerScreenForMotion', { ...route.params, sampleRate: parseFloat(samplingRate), recordingTime: parseFloat(recordingTime) })
                     break;
                 default:
                     console.log(route.params.sensor)

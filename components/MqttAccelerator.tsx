@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { ParamList } from "../types";
+import { Acceleration, ParamList, PayloadForAcceleration } from "../types";
 import { useEffect, useState } from "react";
 import { Accelerometer, AccelerometerMeasurement } from "expo-sensors";
 import { Subscription } from "expo-sensors/build/Pedometer";
@@ -13,13 +13,6 @@ import SendButton from "./Generics/SendButton";
 
 type HomeProps = NativeStackScreenProps<ParamList, 'MqttMessagerScreenForAccelerometer'>
 
-type Acceleration = [number, number, number];
-
-type Payload = {
-    timestamp: string,
-    mobile_accelerations: Acceleration
-
-}
 
 export default function Mqtt({ navigation, route }: HomeProps) {
 
@@ -31,7 +24,7 @@ export default function Mqtt({ navigation, route }: HomeProps) {
     const [timestamp, setTimestamp] = useState<string>();
 
     const [subscribtion, setSubscribtion] = useState<Subscription | null>(null);
-    const payload: Payload = ({ timestamp: '', mobile_accelerations: accel });
+    const payload: PayloadForAcceleration = ({ timestamp: '', mobile_accelerations: accel });
 
     const handleSend = () => {
 

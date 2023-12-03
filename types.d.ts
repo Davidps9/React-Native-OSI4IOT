@@ -1,4 +1,8 @@
 import * as Location from 'expo-location';
+import { Quaternion } from './utils/Threejs/Quaternion';
+
+export type Acceleration = [number, number, number];
+
 
 export type ParamList = {
     Home: ScreenProps,
@@ -7,6 +11,7 @@ export type ParamList = {
     MqttMessagerScreenForGyrosope: ScreenProps,
     MqttMessagerScreenForAccelerometer: ScreenProps,
     MqttMessagerScreenForGeolocation: ScreenProps,
+    MqttMessagerScreenForMotion: ScreenProps,
 };
 
 export type PayloadForQuaternion = {
@@ -14,13 +19,24 @@ export type PayloadForQuaternion = {
     mobile_quaternion: Quaternion
 
 }
+
+export type PayloadForAcceleration = {
+    timestamp: string,
+    mobile_accelerations: AccelerometerMeasurement
+}
+
 export type PayloadForLocation = {
     longitude: number,
     latitude: number,
     timestamp: string,
 }
 
+export type PayloadForMotion = {
+    timestamp: string,
+    mobile_motion: Motion
+}
 
+export type Motion = [number, number, number, number, number, number, number];
 
 export type ScreenProps = {
 

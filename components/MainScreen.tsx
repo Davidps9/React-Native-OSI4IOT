@@ -2,7 +2,7 @@ import { Text, View, Image, ImageSourcePropType, Pressable, TouchableOpacity } f
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { ParamList, Sensor, TopicType } from '../types';
 import styles from '../Styles/styles';
-import { Accelerometer, Gyroscope } from 'expo-sensors';
+import { Accelerometer, DeviceMotion, Gyroscope } from 'expo-sensors';
 import Paho from 'paho-mqtt';
 import { SetStateAction, useEffect, useState } from 'react';
 import { GetData } from '../utils/GetData';
@@ -33,7 +33,8 @@ export default function MainScreen({ route, navigation }: MainScreenProps) {
     const [sensors, setSensors] = useState<Sensor[]>([
         { name: 'Accelerometer', sensor: Accelerometer, sensorType: 'accelerations' },
         { name: 'Quaternion', sensor: Gyroscope, sensorType: 'orientation' },
-        { name: 'Geolocation', sensor: Location, sensorType: 'geolocation' }
+        { name: 'Geolocation', sensor: Location, sensorType: 'geolocation' },
+        { name: 'Motion', sensor: DeviceMotion, sensorType: 'motion' }
     ]);
 
 
@@ -141,7 +142,7 @@ export default function MainScreen({ route, navigation }: MainScreenProps) {
             case ChangedValue.Sensor:
                 localtopics.forEach((topic: TopicType) => {
                     if (topic.sensorType.includes(value) && selectedGroup == topic.groupAcronym) {
-                        console.log('topicId: ', topic.description);
+                        console.log('topicId: ', topic.topicType);
                         setNextValue('Asset_' + topic.assetUid);
                         setGroupHash(topic.groupUid);
                         setTopicHash(topic.topicUid);
@@ -188,9 +189,12 @@ export default function MainScreen({ route, navigation }: MainScreenProps) {
                             onValueChange={(itemValue, itemIndex) => setSelectedSensor(itemValue)}
                         >
                             <Picker.Item label='Select an option' value={`Select an option`} />
-                            <Picker.Item label='Accelerometer' value={`Accelerometer`} />
-                            <Picker.Item label='Gyroscope' value={`Quaternion`} />
-                            <Picker.Item label='Geolocation' value={`Geolocation`} />
+                            {sensors.map((sensor: Sensor, index: number) => {
+                                return (
+                                    <Picker.Item key={index} label={sensor.name} value={sensor.name} />
+                                )
+                            })}
+
                         </Picker>
                         <SendButton text='Next' width={100} handleSend={handleClick} />
                     </>
