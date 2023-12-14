@@ -45,6 +45,7 @@ export default function Form({ navigation }: HomeProps) {
 			}).then(([responseJson, responseStatus]) => {
 				console.log('json: ', responseJson)
 				console.log('status code: ', responseStatus)
+				if (!responseJson?.accessToken) { return setLogin(true) }
 				navigation.navigate('MainScreen', { userName: responseJson.userName, PlatformDomain: platform, accessToken: responseJson.accessToken, password: password })
 			}, (error) => {
 				console.log(error)
