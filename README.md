@@ -1,7 +1,8 @@
 # React-Native-OSI4IOT
 
-## This is an Open Source integration for IOT
+## This is mobile application conneted to an Open Source integration for IOT software
 
-### The app works with geolocation, accelerometer, ~~quaterion~~, ~~motion~~, sensors
+### The app makes use of geolocation, accelerometer, quaterion, motion sensors sending data by mqtt
 
-<sub>Also have to check recording time if its working properly or not</sub>
+<sub>Still have to check how to maintain the session open after closing the app</sub>
+
