@@ -1,10 +1,11 @@
 import { Image, ImageBackground, ImageSourcePropType, TouchableOpacity } from 'react-native';
 import { Pressable, Text, TextInput, View } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { ParamList } from '../types';
 import styles from '../Styles/styles';
 import SendButton from './Generics/SendButton';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const img_url: ImageSourcePropType = require('../assets/logo_large.png')
 const bg_url: ImageSourcePropType = require('../assets/osi4iot_fond.jpg')
@@ -43,9 +44,8 @@ export default function Form({ navigation }: HomeProps) {
 				const responseStatus = response.status;
 				return Promise.all([responseJson, responseStatus]);
 			}).then(([responseJson, responseStatus]) => {
-				console.log('json: ', responseJson)
-				console.log('status code: ', responseStatus)
 				if (!responseJson?.accessToken) { return setLogin(true) }
+				AsyncStorage.setItem('loggedIn', JSON.stringify({ userName: responseJson.userName, password: password, userPlatform: platform }));
 				navigation.navigate('MainScreen', { userName: responseJson.userName, PlatformDomain: platform, accessToken: responseJson.accessToken, password: password })
 			}, (error) => {
 				console.log(error)
@@ -53,13 +53,21 @@ export default function Form({ navigation }: HomeProps) {
 			})
 
 		}
-		console.log('name: ', name);
-		console.log('password: ', password);
 
 	}
 
 	// Hacer que la imagen se esconda cuando salga el keyboard
-
+	useEffect(() => {
+		AsyncStorage.getItem('loggedIn').then((value) => {
+			if (value) {
+				const { userName, password, userPlatform } = JSON.parse(value);
+				setName(userName);
+				setPassword(password);
+				setPlatform(userPlatform);
+				handleClick();
+			}
+		})
+	}, [])
 	return (
 
 		<ImageBackground source={bg_url} resizeMode='cover' style={{ width: '100%', height: '100%', }}>

@@ -6,7 +6,6 @@ import Paho from "paho-mqtt";
 import styles from "../Styles/styles";
 import Header from "./Generics/Header";
 import CancelButton from "./Generics/CancelButton";
-import ProgressBar from "./Generics/ProgressBar";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import *  as Location from 'expo-location';
 import SendButton from "./Generics/SendButton";
@@ -62,13 +61,11 @@ export default function MqttGeolocation({ navigation, route }: HomeProps) {
         const message = new Paho.Message(JSON.stringify(payload));
         message.destinationName = route.params.topic as string;
         client.send(message);
-        console.log('payload ', message.payloadString);
     }, [timestamp])
 
     const unsubscribe = () => {
         subscribtion && subscribtion.remove();
         setSubscribtion(null);
-        console.log('unsubscribing');
     }
 
     function getTimestamp() {
@@ -80,7 +77,7 @@ export default function MqttGeolocation({ navigation, route }: HomeProps) {
     return (
         <View style={[styles.container, { opacity: 1 }]} >
             <Header route={route} navigation={navigation} />
-            <Text style={styles.label}>Gyroscope Data</Text>
+            <Text style={styles.label}>Geolocation Coordinates</Text>
             <View style={styles.textcontainer} >
                 <Text style={styles.label}>Latitude: {location.latitude} </Text>
                 <Text style={styles.label}>Longitude: {location.longitude} </Text>

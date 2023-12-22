@@ -1,7 +1,8 @@
+import { SetStateAction, useEffect } from "react";
 
 
-export function GetData(setData, url, accessToken) {
-    let _json = null;
+export const getData = ((setData: React.Dispatch<SetStateAction<any>>, url: string, accessToken: string) => {
+
     fetch(url, {
         method: 'get',
         headers: {
@@ -11,11 +12,9 @@ export function GetData(setData, url, accessToken) {
         }
     }).then((response) => { return response.json(); })
         .then(json => {
-            _json = json;
-            setData(_json);
+            setData(json);
 
         }, (error) => {
             console.log(error)
         })
-
-}
+})

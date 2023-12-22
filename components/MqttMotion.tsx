@@ -10,9 +10,9 @@ import { View, Text } from 'react-native';
 import styles from '../Styles/styles';
 import SendButton from './Generics/SendButton';
 import CancelButton from './Generics/CancelButton';
-import ProgressBar from './Generics/ProgressBar';
 import Header from './Generics/Header';
-
+import getTimeStamp from '../utils/getTimeStamp';
+import getQuaternion from '../utils/getQuaternion';
 
 type HomeProps = NativeStackScreenProps<ParamList, 'MqttMessagerScreenForMotion'>
 
@@ -21,20 +21,19 @@ export default function MqttMotion({ navigation, route }: HomeProps) {
     const [subscribtion, setSubscribtion] = useState<Subscription | null>(null);
     const [euler, setEuler] = useState<Euler>(new Euler(0, 0, 0, 'YXZ'));
     const [quaternion, setQuaternion] = useState<Quaternion>(new Quaternion(0, 0, 0, 0));
-    const [motion, setMotion] = useState<DeviceMotionMeasurement | null>(null);
+    const [accel, setAccel] = useState<Acceleration>([0, 0, 0]);
 
     const [connected, setConnected] = useState<boolean>(false);
     const samplingRate = route.params.sampleRate || 20;
     const client: Paho.Client = route.params.client;
     const [timestamp, setTimestamp] = useState<string>();
-    const [counter, setCounter] = useState<number>(0);
 
     const payload: PayloadForMotion = ({ timestamp: '', mobile_motion: [0, 0, 0, quaternion._x, quaternion._y, quaternion._z, quaternion._w] });
     const recordingTime = route.params.recordingTime || 10;
 
     const handleSend = () => {
         DeviceMotion.setUpdateInterval(1000 / samplingRate);
-        DeviceMotion.addListener((DeviceMotionData: DeviceMotionMeasurement) => SetValues(DeviceMotionData));
+        DeviceMotion.addListener((DeviceMotionData: DeviceMotionMeasurement) => setValues(DeviceMotionData));
         setConnected(true);
         setTimeout(() => {
             unsubscribe();
@@ -42,43 +41,30 @@ export default function MqttMotion({ navigation, route }: HomeProps) {
         }, recordingTime * 1000);
     }
 
-    function SetValues(DeviceMotion: DeviceMotionMeasurement) {
-        setMotion(DeviceMotion);
+    const setValues = (DeviceMotionData: DeviceMotionMeasurement) => {
+        if (DeviceMotionData.acceleration === null || DeviceMotionData.rotation === undefined) return;
+
+        setAccel([DeviceMotionData.acceleration.x as number, DeviceMotionData.acceleration.y as number, DeviceMotionData.acceleration.z as number]);
+        setEuler(new Euler(DeviceMotionData.rotation.beta as number, DeviceMotionData.rotation.gamma as number, DeviceMotionData.rotation.alpha as number, 'ZXY'));
     }
 
     useEffect(() => {
-        if (connected) {
-            getQuaternion();
-            getTimestamp();
+        if (connected && accel) {
+            getQuaternion(euler, setQuaternion);
+            getTimeStamp(setTimestamp);
             payload.timestamp = timestamp as string;
-            payload.mobile_motion = [motion?.accelerationIncludingGravity.x as number, motion?.accelerationIncludingGravity.y as number, motion?.accelerationIncludingGravity.z as number, quaternion._x, quaternion._y, quaternion._z, quaternion._w];
+            payload.mobile_motion = [accel[0] as number, accel[1] as number, accel[2] as number, quaternion._x, quaternion._y, quaternion._z, quaternion._w];
             const message = new Paho.Message(JSON.stringify(payload));
             message.destinationName = route.params.topic as string;
             client.send(message);
-            setCounter(counter + (1 / route.params.sampleRate!));
         }
-    }, [motion])
+    }, [accel, euler])
 
 
     const unsubscribe = () => {
         subscribtion && subscribtion.remove();
         setSubscribtion(null);
     }
-
-
-    function getQuaternion() {
-        const newQuaternion: Quaternion = quaternion;
-        newQuaternion.setFromEuler(euler);
-        setQuaternion(newQuaternion);
-    }
-
-    function getTimestamp() {
-        const date = new Date();
-        setTimestamp(date.toJSON());
-    }
-
-
-
 
     return (
         <View style={[styles.container, { opacity: 1 }]} >
@@ -92,9 +78,9 @@ export default function MqttMotion({ navigation, route }: HomeProps) {
                     <Text style={styles.label}>Qw: {quaternion._w} </Text>
                 </View>
                 <View style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: 10 }}>
-                    <Text style={styles.label}>Ax: {motion?.accelerationIncludingGravity.x as number} </Text>
-                    <Text style={styles.label}>Ay: {motion?.accelerationIncludingGravity.y as number} </Text>
-                    <Text style={styles.label}>Az: {motion?.accelerationIncludingGravity.z as number} </Text>
+                    <Text style={styles.label}>Ax: {accel[0] as number} </Text>
+                    <Text style={styles.label}>Ay: {accel[1] as number} </Text>
+                    <Text style={styles.label}>Az: {accel[2] as number} </Text>
                 </View>
                 <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: 10 }}>
                     <CancelButton navigation={navigation} />
@@ -104,8 +90,6 @@ export default function MqttMotion({ navigation, route }: HomeProps) {
                 </View>
 
             </View>
-            <ProgressBar progress={(counter / recordingTime) * 100} />
-
         </View>
     );
 }

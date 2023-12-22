@@ -10,8 +10,9 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ParamList, PayloadForQuaternion } from "../types";
 import Header from "./Generics/Header";
 import CancelButton from "./Generics/CancelButton";
-import ProgressBar from "./Generics/ProgressBar";
 import SendButton from "./Generics/SendButton";
+import getQuaternion from "../utils/getQuaternion";
+import getTimeStamp from "../utils/getTimeStamp";
 
 type HomeProps = NativeStackScreenProps<ParamList, 'MqttMessagerScreenForGyrosope'>
 
@@ -25,13 +26,16 @@ export default function Mqtt({ navigation, route }: HomeProps) {
     const samplingRate = route.params.sampleRate || 20;
     const client: Paho.Client = route.params.client;
     const [timestamp, setTimestamp] = useState<string>();
-    const [counter, setCounter] = useState<number>(0);
 
     const payload: PayloadForQuaternion = ({ timestamp: '', mobile_quaternion: new Quaternion(0, 0, 0, 1) });
     const recordingTime = route.params.recordingTime || 10;
 
     const handleSend = () => {
-        DeviceMotion.setUpdateInterval(1000 / samplingRate); DeviceMotion.addListener(({ rotation }: DeviceMotionMeasurement) => setEuler(new Euler(rotation.beta as number, rotation.gamma as number, rotation.alpha as number, 'ZXY')))
+        DeviceMotion.setUpdateInterval(1000 / samplingRate); DeviceMotion.addListener((motion: DeviceMotionMeasurement) => {
+            if (motion?.rotation) {
+                setEuler(new Euler(motion.rotation.beta as number, motion.rotation.gamma as number, motion.rotation.alpha as number, 'ZXY'))
+            }
+        })
         setConnected(true);
         setTimeout(() => {
             unsubscribe();
@@ -41,14 +45,13 @@ export default function Mqtt({ navigation, route }: HomeProps) {
 
     useEffect(() => {
         if (connected) {
-            getQuaternion();
-            getTimestamp();
+            getQuaternion(euler, setQuaternion);
+            getTimeStamp(setTimestamp);
             payload.timestamp = timestamp as string;
             payload.mobile_quaternion = quaternion;
             const message = new Paho.Message(JSON.stringify(payload));
             message.destinationName = route.params.topic as string;
             client.send(message);
-            setCounter(counter + (1 / route.params.sampleRate!));
         }
     }, [euler])
 
@@ -57,21 +60,6 @@ export default function Mqtt({ navigation, route }: HomeProps) {
         subscribtion && subscribtion.remove();
         setSubscribtion(null);
     }
-
-
-    function getQuaternion() {
-        const newQuaternion: Quaternion = quaternion;
-        newQuaternion.setFromEuler(euler);
-        setQuaternion(newQuaternion);
-    }
-
-    function getTimestamp() {
-        const date = new Date();
-        setTimestamp(date.toJSON());
-    }
-
-
-
 
     return (
         <View style={[styles.container, { opacity: 1 }]} >
@@ -90,7 +78,6 @@ export default function Mqtt({ navigation, route }: HomeProps) {
                 </View>
 
             </View>
-            <ProgressBar progress={(counter / recordingTime) * 100} />
 
         </View>
     );

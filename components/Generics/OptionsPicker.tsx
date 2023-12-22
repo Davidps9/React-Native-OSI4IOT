@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Picker } from '@react-native-picker/picker';
-import { TopicType } from '../types';
+import { TopicType } from '../../types';
 import { Switch, Text } from 'react-native';
-import styles from '../Styles/styles';
+import styles from '../../Styles/styles';
 
 export enum optionKeys { 'orgAcronym', 'groupAcronym', 'assetUid' }
 type HomeProps = {

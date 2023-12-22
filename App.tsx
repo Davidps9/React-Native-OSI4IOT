@@ -8,14 +8,19 @@ import { MqttForm } from './components/MqttForm';
 import MqttAccelerator from './components/MqttAccelerator';
 import MqttGeolocation from './components/MqttGeolocation';
 import MqttMotion from './components/MqttMotion';
-
+import { StatusBar, StatusBarStyle } from 'react-native';
+import { useState } from 'react';
 
 
 const Stack = createNativeStackNavigator<ParamList>()
 export default function App() {
 
+  const STYLES = ['default', 'dark-content', 'light-content'] as const;
+  const [styleStatusBar, setStyleStatusBar] = useState<StatusBarStyle>(STYLES[0]);
+
   return (
     <NavigationContainer >
+      <StatusBar barStyle={styleStatusBar} backgroundColor="#000" />
       <Stack.Navigator initialRouteName='Home' >
         <Stack.Screen name='Home' component={Form} options={{ headerShown: false }} />
         <Stack.Screen name="MainScreen" component={Example} options={{ headerShown: false }} />

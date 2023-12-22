@@ -9,6 +9,7 @@ import styles from "../Styles/styles";
 import Header from "./Generics/Header";
 import CancelButton from "./Generics/CancelButton";
 import SendButton from "./Generics/SendButton";
+import getTimeStamp from "../utils/getTimeStamp";
 
 
 type HomeProps = NativeStackScreenProps<ParamList, 'MqttMessagerScreenForAccelerometer'>
@@ -38,7 +39,7 @@ export default function Mqtt({ navigation, route }: HomeProps) {
 
     useEffect(() => {
         if (client.isConnected()) {
-            getTimestamp();
+            getTimeStamp(setTimestamp);
             payload.timestamp = timestamp!;
             payload.mobile_accelerations = accel;
             message = new Paho.Message(JSON.stringify(payload));
@@ -52,11 +53,6 @@ export default function Mqtt({ navigation, route }: HomeProps) {
         setSubscribtion(null);
     }
 
-    function getTimestamp() {
-        let date = new Date();
-        setTimestamp(date.toJSON());
-        console.log('timestamp', timestamp);
-    }
 
 
     return (

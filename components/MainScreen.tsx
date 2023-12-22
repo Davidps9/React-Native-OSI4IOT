@@ -5,8 +5,8 @@ import styles from '../Styles/styles';
 import { Accelerometer, DeviceMotion, Gyroscope } from 'expo-sensors';
 import Paho from 'paho-mqtt';
 import { SetStateAction, useEffect, useState } from 'react';
-import { GetData } from '../utils/GetData';
-import OptionsPicker, { optionKeys } from './OptionsPicker';
+import { getData } from '../utils/hooks/getData';
+import OptionsPicker, { optionKeys } from './Generics/OptionsPicker';
 import { Picker } from '@react-native-picker/picker';
 import HeaderComponent from './Generics/Header';
 import * as Location from 'expo-location';
@@ -71,7 +71,7 @@ export default function MainScreen({ route, navigation }: MainScreenProps) {
     }
 
     useEffect(() => {
-        GetData(setTopics, `https://dicapuaiot.com/admin_api/topics_in_mobile/user_managed`, accessToken);
+        getData(setTopics, `https://dicapuaiot.com/admin_api/topics_in_mobile/user_managed`, accessToken as string);
     }, [])
 
     useEffect(() => {
@@ -107,23 +107,23 @@ export default function MainScreen({ route, navigation }: MainScreenProps) {
     useEffect(() => {
         if (selectedSensor) {
             const index = sensors.findIndex((sensor: Sensor) => sensor.name == selectedSensor);
-            SetValues(ChangedValue.Sensor, sensors[index].sensorType, topics, setSelectedMobileDevice);
+            SetValues(ChangedValue.Sensor, sensors[index].sensorType, topics, null);
         }
     }, [selectedSensor])
 
-    const SetValues = (changedValue: ChangedValue, value: string, localtopics: TopicType[], setNextValue: React.Dispatch<SetStateAction<string>>, compareValueArr?: Sensor[]) => {
+    const SetValues = (changedValue: ChangedValue, value: string, localtopics: TopicType[], setNextValue: React.Dispatch<SetStateAction<string>> | null, compareValueArr?: Sensor[]) => {
 
         switch (changedValue) {
             case ChangedValue.OrganizationAcronym:
                 localtopics.forEach((topic: TopicType) => {
-                    if (topic.orgAcronym === value) {
+                    if (topic.orgAcronym === value && setNextValue != null) {
                         setNextValue(topic.groupAcronym);
                     }
                 });
                 break;
             case ChangedValue.GroupAcronym:
                 localtopics.forEach((topic: TopicType) => {
-                    if (topic.groupAcronym == value) {
+                    if (topic.groupAcronym == value && setNextValue != null) {
                         setNextValue('Asset_' + topic.assetUid);
                     }
                 });
@@ -131,7 +131,7 @@ export default function MainScreen({ route, navigation }: MainScreenProps) {
             case ChangedValue.Device:
                 localtopics.forEach((topic: TopicType) => {
                     compareValueArr?.forEach((sensor: Sensor) => {
-                        if (compareValueArr != undefined && value.includes(topic.assetUid) && topic.sensorType.includes(sensor.name.toLocaleLowerCase()) && selectedGroup == topic.groupAcronym) {
+                        if (compareValueArr != undefined && setNextValue != null && value.includes(topic.assetUid) && topic.sensorType.includes(sensor.sensorType.toLocaleLowerCase()) && selectedGroup == topic.groupAcronym) {
                             setNextValue(sensor.name);
                             setGroupHash(topic.groupUid);
                             setTopicHash(topic.topicUid);
@@ -141,12 +141,10 @@ export default function MainScreen({ route, navigation }: MainScreenProps) {
                 break;
             case ChangedValue.Sensor:
                 localtopics.forEach((topic: TopicType) => {
-                    if (topic.sensorType.includes(value) && selectedGroup == topic.groupAcronym) {
-                        console.log('topicId: ', topic.topicType);
-                        setNextValue('Asset_' + topic.assetUid);
+                    if (topic.sensorType.includes(value) && selectedGroup == topic.groupAcronym && selectedMobileDevice.includes(topic.assetUid)) {
                         setGroupHash(topic.groupUid);
                         setTopicHash(topic.topicUid);
-
+                        setTopicType(topic.topicType);
                     }
                 })
                 break;
@@ -157,7 +155,7 @@ export default function MainScreen({ route, navigation }: MainScreenProps) {
 
     const handleClick = () => {
 
-        if (mqttClient?.isConnected() && selectedSensor) {
+        if (mqttClient?.isConnected() && selectedSensor != 'Select an option') {
             console.log('topic: ', topicString);
 
             navigation.navigate('TimeSelectorScreen', { ...route.params, topic: topicString, client: mqttClient, sensor: selectedSensor })
