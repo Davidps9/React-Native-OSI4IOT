@@ -72,6 +72,7 @@ export type ScreenNames = "Home" | "MainScreen" | "MqttMessagerScreen" | "Movile
 
 
 export type TopicType = {
+    sensorDescription: string;
     id: number,
     orgId: number,
     groupId: number,

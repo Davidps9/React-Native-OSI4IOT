@@ -22,7 +22,8 @@ const styles = StyleSheet.create({
 
   },
   inputcontainer: {
-    marginTop: 20,
+    position: 'relative',
+    marginTop: 40,
     padding: 16,
     display: 'flex',
     flexDirection: 'column',
@@ -86,12 +87,9 @@ const styles = StyleSheet.create({
   },
   picker: {
     border: 'none',
-    borderRadius: 10,
     color: '#000',
     width: '100%',
     backgroundColor: 'rgb(50,116,217)',
-    paddingVertical: 5,
-    paddingHorizontal: 10,
   },
   table: {
     display: 'flex',
@@ -131,30 +129,33 @@ const styles = StyleSheet.create({
 
   },
   HomeContainer: {
-    position: 'absolute',
-    top: 10,
-    left: 20,
+    position: 'relative',
+    left: 30,
 
   },
   logOutContainer: {
-    position: 'absolute',
-    top: 10,
-    right: 20,
+    position: 'relative',
+    right: 30,
 
+  },
+  mqttConnected: {
+    position: 'relative',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 20
   },
   Header: {
     position: 'absolute',
-    top: 30,
-    left: 0,
+    top: 0,
     width: '100%',
-    height: 60,
+    height: 70,
     display: 'flex',
     flexDirection: 'row',
+    backgroundColor: 'rgb(32,34,38)',
     justifyContent: 'space-between',
-    borderBottomColor: 'rgb(50,116,217)',
-    borderBottomWidth: 3,
-    padding: 10,
-
+    alignItems: 'center',
   },
   RadialMenu: {
 

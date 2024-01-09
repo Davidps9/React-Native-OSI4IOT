@@ -85,7 +85,7 @@ export default function OptionsPicker({ _label, options, setSelectedValue, value
                     )
                 case optionKeys.assetUid:
                     return (
-                        <Picker.Item key={keyName} label={'Asset_' + optionsToshow[keyName].assetUid} value={'Asset_' + optionsToshow[keyName].assetUid} />
+                        <Picker.Item key={keyName} label={optionsToshow[keyName].assetDescription} value={optionsToshow[keyName].assetDescription} />
                     )
             }
         }

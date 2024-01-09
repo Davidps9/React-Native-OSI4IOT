@@ -32,7 +32,7 @@ export default function MainScreen({ route, navigation }: MainScreenProps) {
 
     const [sensors, setSensors] = useState<Sensor[]>([
         { name: 'Accelerometer', sensor: Accelerometer, sensorType: 'accelerations' },
-        { name: 'Quaternion', sensor: Gyroscope, sensorType: 'orientation' },
+        { name: 'Orientation', sensor: Gyroscope, sensorType: 'orientation' },
         { name: 'Geolocation', sensor: Location, sensorType: 'geolocation' },
         { name: 'Motion', sensor: DeviceMotion, sensorType: 'motion' }
     ]);
@@ -124,14 +124,14 @@ export default function MainScreen({ route, navigation }: MainScreenProps) {
             case ChangedValue.GroupAcronym:
                 localtopics.forEach((topic: TopicType) => {
                     if (topic.groupAcronym == value && setNextValue != null) {
-                        setNextValue('Asset_' + topic.assetUid);
+                        setNextValue(topic.assetDescription);
                     }
                 });
                 break;
             case ChangedValue.Device:
                 localtopics.forEach((topic: TopicType) => {
                     compareValueArr?.forEach((sensor: Sensor) => {
-                        if (compareValueArr != undefined && setNextValue != null && value.includes(topic.assetUid) && topic.sensorType.includes(sensor.sensorType.toLocaleLowerCase()) && selectedGroup == topic.groupAcronym) {
+                        if (compareValueArr != undefined && setNextValue != null && topic.sensorType.includes(sensor.sensorType.toLocaleLowerCase()) && selectedGroup == topic.groupAcronym) {
                             setNextValue(sensor.name);
                             setGroupHash(topic.groupUid);
                             setTopicHash(topic.topicUid);
@@ -141,7 +141,7 @@ export default function MainScreen({ route, navigation }: MainScreenProps) {
                 break;
             case ChangedValue.Sensor:
                 localtopics.forEach((topic: TopicType) => {
-                    if (topic.sensorType.includes(value) && selectedGroup == topic.groupAcronym && selectedMobileDevice.includes(topic.assetUid)) {
+                    if (topic.sensorType && selectedGroup == topic.groupAcronym && selectedMobileDevice.includes(topic.assetUid)) {
                         setGroupHash(topic.groupUid);
                         setTopicHash(topic.topicUid);
                         setTopicType(topic.topicType);
@@ -166,7 +166,7 @@ export default function MainScreen({ route, navigation }: MainScreenProps) {
     return (
         <View style={[styles.container, { opacity: 1, }]}>
             <HeaderComponent route={route} navigation={navigation} />
-            <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 20 }}>
+            <View style={styles.mqttConnected}>
                 {connected ? <Text style={styles.label}>Connected</Text> : <Text style={styles.label}>Not connected</Text>}
                 <View style={[styles.conectionDiv,
                 connected ? { backgroundColor: 'lime' } : { backgroundColor: 'red' }]}>
