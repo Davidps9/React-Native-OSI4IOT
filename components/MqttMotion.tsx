@@ -69,7 +69,7 @@ export default function MqttMotion({ navigation, route }: HomeProps) {
     return (
         <View style={[styles.container, { opacity: 1 }]} >
             <Header route={route} navigation={navigation} />
-            <Text style={styles.label}>Gyroscope Data</Text>
+            <Text style={styles.label}>Motion Data</Text>
             <View style={[styles.textcontainer]} >
                 <View style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: 10 }}>
                     <Text style={styles.label}>Qx: {quaternion._x} </Text>
