@@ -64,7 +64,7 @@ export default function Mqtt({ navigation, route }: HomeProps) {
     return (
         <View style={[styles.container, { opacity: 1 }]} >
             <Header route={route} navigation={navigation} />
-            <Text style={styles.label}>Gyroscope Data</Text>
+            <Text style={styles.label}>Orientation Data</Text>
             <View style={styles.textcontainer} >
                 <Text style={styles.label}>x: {quaternion._x} </Text>
                 <Text style={styles.label}>y: {quaternion._y} </Text>

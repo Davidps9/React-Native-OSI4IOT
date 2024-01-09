@@ -1,4 +1,4 @@
-import { Image, ImageBackground, ImageSourcePropType, TouchableOpacity } from 'react-native';
+import { Image, ImageBackground, ImageSourcePropType, Keyboard, TouchableOpacity } from 'react-native';
 import { Pressable, Text, TextInput, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -23,6 +23,26 @@ export default function Form({ navigation }: HomeProps) {
 	const [platform, setPlatform] = useState<string>('')
 	const [password, setPassword] = useState<string>('')
 	const [logInMessage, setLogin] = useState<boolean>(false)
+	const [KeyboardIsShown, setKeyboardIsShown] = useState<boolean>(false)
+
+	useEffect(() => {
+		const keyboardDidShowListener = Keyboard.addListener(
+			'keyboardDidShow',
+			() => {
+				setKeyboardIsShown(true);
+			}
+		);
+		const keyboardDidHideListener = Keyboard.addListener(
+			'keyboardDidHide',
+			() => {
+				setKeyboardIsShown(false);
+			}
+		);
+		return () => {
+			keyboardDidHideListener.remove();
+			keyboardDidShowListener.remove();
+		};
+	}, []);
 
 	const handleClick = () => {
 		if (name && password && platform !== '') {
@@ -73,14 +93,14 @@ export default function Form({ navigation }: HomeProps) {
 		<ImageBackground source={bg_url} resizeMode='cover' style={{ width: '100%', height: '100%', }}>
 			<View style={styles.container}>
 				<Image source={img_url} style={styles.img} />
-				<Text style={{ fontSize: 30, color: '#fff', }}>Login </Text>
+				{!KeyboardIsShown ? <Text style={{ fontSize: 30, color: '#fff', }}>Login </Text> : null}
 				<View style={styles.inputcontainer}>
 					<Text style={styles.label} >Platform Domain</Text>
 					<TextInput style={styles.textInput} onChangeText={(text) => { setPlatform(text) }} value={platform} placeholder='CIMNE' placeholderTextColor={'grey'} />
 					<Text style={styles.label} >Username</Text>
-					<TextInput style={styles.textInput} onChangeText={(text) => { setName(text) }} value={name} placeholder='John Whick' placeholderTextColor={'grey'} />
+					<TextInput style={styles.textInput} onChangeText={(text) => { setName(text) }} value={name} placeholder='username' placeholderTextColor={'grey'} />
 					<Text style={styles.label} >Password</Text>
-					<TextInput style={styles.textInput} onChangeText={(text) => { setPassword(text) }} value={password} placeholder='safe-password' placeholderTextColor={'grey'} secureTextEntry={true} />
+					<TextInput style={styles.textInput} onChangeText={(text) => { setPassword(text) }} value={password} placeholder='········' placeholderTextColor={'grey'} secureTextEntry={true} />
 					<SendButton text='Sign In' width={100} handleSend={handleClick} />
 				</View>
 				<Text style={logInMessage ? { color: 'red', fontSize: 14, margin: 5, } : { display: 'none', }}>User name, password or platform domain are incorrect</Text>
