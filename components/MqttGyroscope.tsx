@@ -66,10 +66,10 @@ export default function Mqtt({ navigation, route }: HomeProps) {
             <Header route={route} navigation={navigation} />
             <Text style={styles.label}>Orientation Data</Text>
             <View style={styles.textcontainer} >
-                <Text style={styles.label}>x: {quaternion._x} </Text>
-                <Text style={styles.label}>y: {quaternion._y} </Text>
-                <Text style={styles.label}>z: {quaternion._z} </Text>
-                <Text style={styles.label}>w: {quaternion._w} </Text>
+                <Text style={styles.label}>x: {quaternion._x.toFixed(6)} </Text>
+                <Text style={styles.label}>y: {quaternion._y.toFixed(6)} </Text>
+                <Text style={styles.label}>z: {quaternion._z.toFixed(6)} </Text>
+                <Text style={styles.label}>w: {quaternion._w.toFixed(6)} </Text>
                 <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: 10 }}>
                     <CancelButton navigation={navigation} />
 

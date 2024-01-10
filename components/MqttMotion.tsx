@@ -72,15 +72,15 @@ export default function MqttMotion({ navigation, route }: HomeProps) {
             <Text style={styles.label}>Motion Data</Text>
             <View style={[styles.textcontainer]} >
                 <View style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: 10 }}>
-                    <Text style={styles.label}>Qx: {quaternion._x} </Text>
-                    <Text style={styles.label}>Qy: {quaternion._y} </Text>
-                    <Text style={styles.label}>Qz: {quaternion._z} </Text>
-                    <Text style={styles.label}>Qw: {quaternion._w} </Text>
+                    <Text style={styles.label}>Qx: {quaternion._x.toFixed(6)} </Text>
+                    <Text style={styles.label}>Qy: {quaternion._y.toFixed(6)} </Text>
+                    <Text style={styles.label}>Qz: {quaternion._z.toFixed(6)} </Text>
+                    <Text style={styles.label}>Qw: {quaternion._w.toFixed(6)} </Text>
                 </View>
                 <View style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: 10 }}>
-                    <Text style={styles.label}>Ax: {accel[0] as number} </Text>
-                    <Text style={styles.label}>Ay: {accel[1] as number} </Text>
-                    <Text style={styles.label}>Az: {accel[2] as number} </Text>
+                    <Text style={styles.label}>Ax: {accel[0].toFixed(6)} </Text>
+                    <Text style={styles.label}>Ay: {accel[1].toFixed(6)} </Text>
+                    <Text style={styles.label}>Az: {accel[2].toFixed(6)} </Text>
                 </View>
                 <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: 10 }}>
                     <CancelButton navigation={navigation} />

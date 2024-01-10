@@ -62,9 +62,9 @@ export default function Mqtt({ navigation, route }: HomeProps) {
 
             <View>
                 <View style={styles.textcontainer} >
-                    <Text style={styles.label}>x: {(accel[0])} </Text>
-                    <Text style={styles.label}>y: {(accel[1])} </Text>
-                    <Text style={styles.label}>z: {(accel[2])} </Text>
+                    <Text style={styles.label}>x: {accel[0].toFixed(6)} </Text>
+                    <Text style={styles.label}>y: {accel[1].toFixed(6)} </Text>
+                    <Text style={styles.label}>z: {accel[2].toFixed(6)} </Text>
                     <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: 10 }}>
                         <CancelButton navigation={navigation} />
                         <SendButton text="Send" width={45} handleSend={handleSend} />
