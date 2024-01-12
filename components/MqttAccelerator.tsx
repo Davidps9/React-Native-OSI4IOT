@@ -1,7 +1,7 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Acceleration, ParamList, PayloadForAcceleration } from "../types";
 import { useEffect, useState } from "react";
-import { Accelerometer, AccelerometerMeasurement } from "expo-sensors";
+import { DeviceMotion } from "expo-sensors";
 import { Subscription } from "expo-sensors/build/Pedometer";
 import Paho from "paho-mqtt";
 import { View, Text, Pressable, TouchableOpacity } from "react-native";
@@ -30,8 +30,8 @@ export default function Mqtt({ navigation, route }: HomeProps) {
     const handleSend = () => {
 
         const samplingRate = route.params.sampleRate || 20;
-        Accelerometer.setUpdateInterval(1000 / samplingRate);
-        setSubscribtion(Accelerometer.addListener((data: AccelerometerMeasurement) => setAccel([data.x, data.y, data.z])));
+        DeviceMotion.setUpdateInterval(1000 / samplingRate);
+        setSubscribtion(DeviceMotion.addListener(({ acceleration }) => { if (acceleration === null || acceleration === undefined) { return } setAccel([acceleration.x, acceleration.y, acceleration.z]) }));
         setTimeout(() => {
             unsubscribe();
         }, recordingTime * 1000);
