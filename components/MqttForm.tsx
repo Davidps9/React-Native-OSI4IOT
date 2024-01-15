@@ -25,7 +25,7 @@ export function MqttForm({ navigation, route }: MainscreenProps) {
 
                     navigation.navigate('MqttMessagerScreenForAccelerometer', { ...route.params, sampleRate: parseFloat(samplingRate), recordingTime: parseFloat(recordingTime) })
                     break;
-                case 'Quaternion':
+                case 'Orientation':
                     navigation.navigate('MqttMessagerScreenForGyrosope', { ...route.params, sampleRate: parseFloat(samplingRate), recordingTime: parseFloat(recordingTime) })
                     break;
                 case 'Geolocation':
