@@ -3,9 +3,10 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { ParamList } from '../types';
 import { LogBox, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import styles from '../Styles/styles';
-import HeaderComponent from './Generics/Header';
-import CancelButton from './Generics/CancelButton';
-import SendButton from './Generics/SendButton';
+import HeaderComponent from './generics/Header';
+import CancelButton from './generics/CancelButton';
+import SendButton from './generics/SendButton';
+import InputFooter from './generics/InputFooter';
 
 
 type MainscreenProps = NativeStackScreenProps<ParamList, 'TimeSelectorScreen'>
@@ -57,26 +58,27 @@ export function MqttForm({ navigation, route }: MainscreenProps) {
     }
 
     return (
-        <View style={[styles.container, { opacity: 1 }]}>
+        <>
             <HeaderComponent route={route} navigation={navigation} />
-            <View style={[styles.inputcontainer, { justifyContent: 'space-around' }]}>
-                <Text style={styles.label} >Sampling rate (times x sec)</Text>
-                <TextInput style={styles.textInput} keyboardType='numeric' onChangeText={(text) => { onCheckTextInput(setSamplingRate, text) }} value={samplingRate} />
-                <Text style={styles.label} >Recording Time (sec)</Text>
-                <TextInput style={styles.textInput} keyboardType='numeric' onChangeText={(text) => { onCheckTextInput(setRecordingTime, text) }} value={recordingTime} />
-                {route.params.sensor === 'Geolocation' ?
-                    <>
-                        <Text style={styles.label} >Distance Interval in meters</Text>
-                        <TextInput style={styles.textInput} keyboardType='numeric' onChangeText={(text) => { onCheckTextInput(setDistanceInterval, text) }} value={distanceInterval} />
-                    </>
-                    : null}
-                <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                    <CancelButton navigation={navigation} />
-                    <SendButton text="Next" width={45} handleSend={handleClick} />
-                </View>
-            </View>
-            {alert ? <Text style={{ color: 'red', fontSize: 14, margin: 5, }}>Recording time and Sampling rate can not be 0, or negative</Text> : null}
 
-        </View>
+            <View style={styles.container}>
+                <View style={[styles.inputcontainer, { justifyContent: 'space-around' }]}>
+                    <Text style={styles.label} >Sampling rate (times x sec)</Text>
+                    <TextInput style={styles.textInput} keyboardType='numeric' onChangeText={(text) => { onCheckTextInput(setSamplingRate, text) }} value={samplingRate} />
+                    <Text style={styles.label} >Recording Time (sec)</Text>
+                    <TextInput style={styles.textInput} keyboardType='numeric' onChangeText={(text) => { onCheckTextInput(setRecordingTime, text) }} value={recordingTime} />
+                    {route.params.sensor === 'Geolocation' ?
+                        <>
+                            <Text style={styles.label} >Distance Interval in meters</Text>
+                            <TextInput style={styles.textInput} keyboardType='numeric' onChangeText={(text) => { onCheckTextInput(setDistanceInterval, text) }} value={distanceInterval} />
+                        </>
+                        : null}
+                    <InputFooter HomeProps={{ route, navigation }} handleSend={handleClick} buttonText='Next' />
+
+                </View>
+                {alert ? <Text style={{ color: 'red', fontSize: 14, margin: 5, }}>Recording time and Sampling rate can not be 0, or negative</Text> : null}
+
+            </View>
+        </>
     )
 }

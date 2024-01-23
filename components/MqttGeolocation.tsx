@@ -4,11 +4,13 @@ import { Subscription } from "expo-sensors/build/Pedometer";
 import { ParamList, PayloadForLocation } from "../types";
 import Paho from "paho-mqtt";
 import styles from "../Styles/styles";
-import Header from "./Generics/Header";
-import CancelButton from "./Generics/CancelButton";
+import Header from "./generics/Header";
+import CancelButton from "./generics/CancelButton";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import *  as Location from 'expo-location';
-import SendButton from "./Generics/SendButton";
+import SendButton from "./generics/SendButton";
+import Results from "./generics/Results";
+import InputFooter from "./generics/InputFooter";
 
 type HomeProps = NativeStackScreenProps<ParamList, 'MqttMessagerScreenForGeolocation'>
 
@@ -75,19 +77,19 @@ export default function MqttGeolocation({ navigation, route }: HomeProps) {
 
 
     return (
-        <View style={[styles.container, { opacity: 1 }]} >
+        <>
             <Header route={route} navigation={navigation} />
-            <Text style={styles.label}>Geolocation Coordinates</Text>
-            <View style={styles.textcontainer} >
-                <Text style={styles.label}>Latitude: {location.latitude} </Text>
-                <Text style={styles.label}>Longitude: {location.longitude} </Text>
-                <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: 10 }}>
-                    <CancelButton navigation={navigation} />
-                    <SendButton text="Send" width={45} handleSend={handleSend} />
+
+            <View style={styles.container} >
+                <Text style={styles.label}>Geolocation Coordinates</Text>
+                <View style={styles.textcontainer} >
+                    <Results labels={["Latitude", "Longitude"]} data={[location.latitude, location.longitude]} fixed />
+                    <InputFooter HomeProps={{ route, navigation }} handleSend={handleSend} />
+
+
                 </View>
 
             </View>
-
-        </View>
+        </>
     );
 }

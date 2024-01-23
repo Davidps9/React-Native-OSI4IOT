@@ -8,11 +8,13 @@ import { Quaternion } from "../utils/Threejs/Quaternion";
 import { Euler } from "../utils/Threejs/Euler";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ParamList, PayloadForQuaternion } from "../types";
-import Header from "./Generics/Header";
-import CancelButton from "./Generics/CancelButton";
-import SendButton from "./Generics/SendButton";
+import Header from "./generics/Header";
+import CancelButton from "./generics/CancelButton";
+import SendButton from "./generics/SendButton";
 import getQuaternion from "../utils/getQuaternion";
 import getTimeStamp from "../utils/getTimeStamp";
+import Results from "./generics/Results";
+import InputFooter from "./generics/InputFooter";
 
 type HomeProps = NativeStackScreenProps<ParamList, 'MqttMessagerScreenForGyrosope'>
 
@@ -62,23 +64,20 @@ export default function Mqtt({ navigation, route }: HomeProps) {
     }
 
     return (
-        <View style={[styles.container, { opacity: 1 }]} >
+        <>
             <Header route={route} navigation={navigation} />
-            <Text style={styles.label}>Orientation Data</Text>
-            <View style={styles.textcontainer} >
-                <Text style={styles.label}>x: {quaternion._x.toFixed(6)} </Text>
-                <Text style={styles.label}>y: {quaternion._y.toFixed(6)} </Text>
-                <Text style={styles.label}>z: {quaternion._z.toFixed(6)} </Text>
-                <Text style={styles.label}>w: {quaternion._w.toFixed(6)} </Text>
-                <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: 10 }}>
-                    <CancelButton navigation={navigation} />
 
-                    <SendButton width={45} text="Send" handleSend={handleSend} />
+            <View style={styles.container} >
+                <Text style={styles.label}>Orientation Data</Text>
+                <View style={styles.textcontainer} >
+                    <Results labels={["QX", "QY", "QZ", "W"]} data={quaternion.toArray()} fixed />
+
+                    <InputFooter HomeProps={{ route, navigation }} handleSend={handleSend} />
+
 
                 </View>
 
             </View>
-
-        </View>
+        </>
     );
 }

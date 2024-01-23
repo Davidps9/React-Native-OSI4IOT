@@ -1,29 +1,30 @@
 import { StyleSheet } from 'react-native'
-import { Dimensions } from 'react-native/Libraries/Utilities/Dimensions';
+import { Dimensions } from 'react-native';
 
 
 
 const styles = StyleSheet.create({
 
-
   img: {
     position: 'absolute',
-    top: 40,
+    top: 36,
     left: '30%',
     width: 150,
     height: 36,
   },
   container: {
-    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    margin: 0,
+    padding: 0,
     backgroundColor: 'rgb(0,0,0)',
     alignItems: 'center',
     justifyContent: 'center',
-    opacity: 0.8,
-
+    opacity: 1,
+    height: Dimensions.get('window').height - 70,
   },
   inputcontainer: {
     position: 'relative',
-    marginTop: 40,
     padding: 16,
     display: 'flex',
     flexDirection: 'column',
@@ -57,12 +58,6 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     padding: 4,
   },
-  textInputPressed: {
-    color: '#000',
-    fontWeight: '500',
-    padding: 4,
-
-  },
   label: {
     color: '#fff',
     fontSize: 18,
@@ -91,43 +86,6 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: 'rgb(50,116,217)',
   },
-  table: {
-    display: 'flex',
-    flex: 0,
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-
-  },
-  tableRow: {
-    color: '#fff',
-    width: 350,
-    fontSize: 14,
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    borderColor: 'rgb(50,116,217)',
-    borderWidth: 1,
-    padding: 10,
-  },
-  NavContainer: {
-
-    position: 'absolute',
-    alignItems: 'center',
-    justifyContent: 'center',
-    bottom: 20,
-  },
-  NavBar: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    width: '100%',
-    padding: 10,
-    borderTopColor: 'rgb(50,116,217)',
-    borderTopWidth: 3,
-
-  },
   HomeContainer: {
     position: 'relative',
     left: 30,
@@ -139,17 +97,17 @@ const styles = StyleSheet.create({
 
   },
   mqttConnected: {
-    position: 'relative',
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    position: 'relative',
+
     gap: 10,
     padding: 10,
+    margin: 0,
   },
   Header: {
-    position: 'absolute',
-    top: 0,
     width: '100%',
     height: 70,
     display: 'flex',
@@ -157,54 +115,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgb(32,34,38)',
     justifyContent: 'space-between',
     alignItems: 'center',
+    margin: 0,
   },
-  RadialMenu: {
-
-    position: 'relative',
-    top: 0,
-    right: 0,
-    width: 60,
-    height: 60,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 50,
-    backgroundColor: 'transparent',
-    borderColor: 'rgb(50,116,217)',
-    borderWidth: 2,
-
-  },
-  DigitalTwinIcon: {
-    position: 'relative',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 50,
-    backgroundColor: 'transparent',
-    borderColor: 'rgb(50,116,217)',
-    borderWidth: 2,
-    width: 60,
-    height: 60,
-
-
-  },
-  RadialMenuContainer: {
-    position: 'relative',
-    top: 0,
-    right: 0,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 500,
-    backgroundColor: 'transparent',
-    borderColor: 'rgb(50,116,217)',
-    borderWidth: 3,
-    width: 350,
-    height: 350,
-
-  },
-
-
   conectionDiv: {
     borderRadius: 50,
     borderWidth: 2,

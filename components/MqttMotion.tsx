@@ -8,11 +8,13 @@ import { Acceleration, ParamList, PayloadForMotion, PayloadForQuaternion } from 
 import { DeviceMotion, DeviceMotionMeasurement } from 'expo-sensors';
 import { View, Text } from 'react-native';
 import styles from '../Styles/styles';
-import SendButton from './Generics/SendButton';
-import CancelButton from './Generics/CancelButton';
-import Header from './Generics/Header';
+import SendButton from './generics/SendButton';
+import CancelButton from './generics/CancelButton';
+import Header from './generics/Header';
 import getTimeStamp from '../utils/getTimeStamp';
 import getQuaternion from '../utils/getQuaternion';
+import Results from './generics/Results';
+import InputFooter from './generics/InputFooter';
 
 type HomeProps = NativeStackScreenProps<ParamList, 'MqttMessagerScreenForMotion'>
 
@@ -67,29 +69,22 @@ export default function MqttMotion({ navigation, route }: HomeProps) {
     }
 
     return (
-        <View style={[styles.container, { opacity: 1 }]} >
+        <>
             <Header route={route} navigation={navigation} />
-            <Text style={styles.label}>Motion Data</Text>
-            <View style={[styles.textcontainer]} >
-                <View style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: 10 }}>
-                    <Text style={styles.label}>Qx: {quaternion._x.toFixed(6)} </Text>
-                    <Text style={styles.label}>Qy: {quaternion._y.toFixed(6)} </Text>
-                    <Text style={styles.label}>Qz: {quaternion._z.toFixed(6)} </Text>
-                    <Text style={styles.label}>Qw: {quaternion._w.toFixed(6)} </Text>
-                </View>
-                <View style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: 10 }}>
-                    <Text style={styles.label}>Ax: {accel[0].toFixed(6)} </Text>
-                    <Text style={styles.label}>Ay: {accel[1].toFixed(6)} </Text>
-                    <Text style={styles.label}>Az: {accel[2].toFixed(6)} </Text>
-                </View>
-                <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: 10 }}>
-                    <CancelButton navigation={navigation} />
 
-                    <SendButton width={45} text="Send" handleSend={handleSend} />
+            <View style={styles.container} >
+                <Text style={styles.label}>Motion Data</Text>
+                <View style={[styles.textcontainer]} >
+                    <View style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: 10 }}>
+                        <Results labels={["QX", "QY", "QZ", "W"]} data={quaternion.toArray()} fixed />
+                    </View>
+                    <View style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: 10 }}>
+                        <Results labels={["X", "Y", "Z"]} data={accel} fixed />
+                    </View>
 
+                    <InputFooter HomeProps={{ route, navigation }} handleSend={handleSend} />
                 </View>
-
             </View>
-        </View>
+        </>
     );
 }

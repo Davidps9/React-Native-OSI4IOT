@@ -6,11 +6,11 @@ import { Accelerometer, DeviceMotion, Gyroscope } from 'expo-sensors';
 import Paho from 'paho-mqtt';
 import { SetStateAction, useEffect, useState } from 'react';
 import { getData } from '../utils/hooks/getData';
-import OptionsPicker, { optionKeys } from './Generics/OptionsPicker';
+import OptionsPicker, { optionKeys } from './generics/OptionsPicker';
 import { Picker } from '@react-native-picker/picker';
-import HeaderComponent from './Generics/Header';
+import HeaderComponent from './generics/Header';
 import * as Location from 'expo-location';
-import SendButton from './Generics/SendButton';
+import SendButton from './generics/SendButton';
 enum ChangedValue {
     'OrganizationAcronym',
     'GroupAcronym',
@@ -164,45 +164,48 @@ export default function MainScreen({ route, navigation }: MainScreenProps) {
     }
 
     return (
-        <View style={[styles.container, { opacity: 1, }]}>
+        <>
             <HeaderComponent route={route} navigation={navigation} />
-            <View style={styles.mqttConnected}>
-                {connected ? <Text style={styles.label}>Connected</Text> : <Text style={styles.label}>Not connected</Text>}
-                <View style={[styles.conectionDiv,
-                connected ? { backgroundColor: 'lime' } : { backgroundColor: 'red' }]}>
+
+            <View style={styles.container}>
+                <View style={styles.mqttConnected}>
+                    {connected ? <Text style={styles.label}>Connected</Text> : <Text style={styles.label}>Not connected</Text>}
+                    <View style={[styles.conectionDiv,
+                    connected ? { backgroundColor: 'lime' } : { backgroundColor: 'red' }]}>
+                    </View>
+                </View>
+                <View style={styles.inputcontainer}>
+                    {topics != null ?
+                        <>
+                            <Text style={styles.textbutton} >Select Organization</Text>
+                            <OptionsPicker options={topics} setSelectedValue={setSelectedOrganization} _label={selectedOrganization} valueType={optionKeys.orgAcronym} />
+                            <Text style={styles.textbutton} >Select group</Text>
+                            <OptionsPicker options={topics} setSelectedValue={setSelectedGroup} _label={selectedGroup} valueType={optionKeys.groupAcronym} compareValue={selectedOrganization} />
+                            <Text style={styles.textbutton} >Select Asset</Text>
+                            <OptionsPicker options={topics} setSelectedValue={setSelectedMobileDevice} _label={selectedMobileDevice} valueType={optionKeys.assetUid} compareValue={selectedGroup} />
+                            <Text style={styles.textbutton} >Select Sensor</Text>
+                            <Picker style={styles.picker}
+                                selectedValue={selectedSensor}
+                                onValueChange={(itemValue, itemIndex) => setSelectedSensor(itemValue)}
+                            >
+                                <Picker.Item label='Select an option' value={`Select an option`} />
+                                {sensors.map((sensor: Sensor, index: number) => {
+                                    return (
+                                        <Picker.Item key={index} label={sensor.name} value={sensor.name} />
+                                    )
+                                })}
+
+                            </Picker>
+                            <SendButton text='Next' width={100} handleSend={handleClick} />
+                        </>
+                        :
+
+                        <Text>No mobile devices found</Text>
+                    }
+
+
                 </View>
             </View>
-            <View style={styles.inputcontainer}>
-                {topics != null ?
-                    <>
-                        <Text style={styles.textbutton} >Select Organization</Text>
-                        <OptionsPicker options={topics} setSelectedValue={setSelectedOrganization} _label={selectedOrganization} valueType={optionKeys.orgAcronym} />
-                        <Text style={styles.textbutton} >Select group</Text>
-                        <OptionsPicker options={topics} setSelectedValue={setSelectedGroup} _label={selectedGroup} valueType={optionKeys.groupAcronym} compareValue={selectedOrganization} />
-                        <Text style={styles.textbutton} >Select Asset</Text>
-                        <OptionsPicker options={topics} setSelectedValue={setSelectedMobileDevice} _label={selectedMobileDevice} valueType={optionKeys.assetUid} compareValue={selectedGroup} />
-                        <Text style={styles.textbutton} >Select Sensor</Text>
-                        <Picker style={styles.picker}
-                            selectedValue={selectedSensor}
-                            onValueChange={(itemValue, itemIndex) => setSelectedSensor(itemValue)}
-                        >
-                            <Picker.Item label='Select an option' value={`Select an option`} />
-                            {sensors.map((sensor: Sensor, index: number) => {
-                                return (
-                                    <Picker.Item key={index} label={sensor.name} value={sensor.name} />
-                                )
-                            })}
-
-                        </Picker>
-                        <SendButton text='Next' width={100} handleSend={handleClick} />
-                    </>
-                    :
-
-                    <Text>No mobile devices found</Text>
-                }
-
-
-            </View>
-        </View>
+        </>
     )
 }

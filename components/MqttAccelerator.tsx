@@ -6,10 +6,12 @@ import { Subscription } from "expo-sensors/build/Pedometer";
 import Paho from "paho-mqtt";
 import { View, Text, Pressable, TouchableOpacity } from "react-native";
 import styles from "../Styles/styles";
-import Header from "./Generics/Header";
-import CancelButton from "./Generics/CancelButton";
-import SendButton from "./Generics/SendButton";
+import Header from "./generics/Header";
+import CancelButton from "./generics/CancelButton";
+import SendButton from "./generics/SendButton";
 import getTimeStamp from "../utils/getTimeStamp";
+import Results from "./generics/Results";
+import InputFooter from "./generics/InputFooter";
 
 
 type HomeProps = NativeStackScreenProps<ParamList, 'MqttMessagerScreenForAccelerometer'>
@@ -56,21 +58,20 @@ export default function Mqtt({ navigation, route }: HomeProps) {
 
 
     return (
-        <View style={[styles.container, { opacity: 1 }]}>
+        <>
             <Header route={route} navigation={navigation} />
-            <Text style={styles.label}>Accelerometer Data</Text>
 
-            <View>
-                <View style={styles.textcontainer} >
-                    <Text style={styles.label}>x: {accel[0].toFixed(6)} </Text>
-                    <Text style={styles.label}>y: {accel[1].toFixed(6)} </Text>
-                    <Text style={styles.label}>z: {accel[2].toFixed(6)} </Text>
-                    <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: 10 }}>
-                        <CancelButton navigation={navigation} />
-                        <SendButton text="Send" width={45} handleSend={handleSend} />
+            <View style={styles.container}>
+                <Text style={styles.label}>Accelerometer Data</Text>
+
+                <View>
+                    <View style={styles.textcontainer} >
+                        <Results labels={["X", "Y", "Z"]} data={accel} fixed />
+                        <InputFooter HomeProps={{ route, navigation }} handleSend={handleSend} />
+
                     </View>
                 </View>
             </View>
-        </View>
+        </>
     )
 }

@@ -4,8 +4,9 @@ import React, { useEffect, useState } from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { ParamList } from '../types';
 import styles from '../Styles/styles';
-import SendButton from './Generics/SendButton';
+import SendButton from './generics/SendButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { releaseChannel } from 'expo-updates';
 
 const img_url: ImageSourcePropType = require('../assets/logo_large.png')
 const bg_url: ImageSourcePropType = require('../assets/osi4iot_fond.jpg')
@@ -65,6 +66,7 @@ export default function Form({ navigation }: HomeProps) {
 				return Promise.all([responseJson, responseStatus]);
 			}).then(([responseJson, responseStatus]) => {
 				if (!responseJson?.accessToken) { return setLogin(true) }
+				setLogin(false);
 				AsyncStorage.setItem('loggedIn', JSON.stringify({ userName: responseJson.userName, password: password, userPlatform: platform, lastLog: new Date().getDate() }));
 				navigation.navigate('MainScreen', { userName: responseJson.userName, PlatformDomain: platform, accessToken: responseJson.accessToken, password: password })
 			}, (error) => {
@@ -95,10 +97,10 @@ export default function Form({ navigation }: HomeProps) {
 	return (
 
 		<ImageBackground source={bg_url} resizeMode='cover' style={{ width: '100%', height: '100%', }}>
-			<View style={styles.container}>
-				<Image source={img_url} style={styles.img} />
+			<View style={[styles.container, { opacity: 0.7 }, { height: '100%' }]}>
+				{!KeyboardIsShown ? <Image source={img_url} style={styles.img} /> : null}
 				{!KeyboardIsShown ? <Text style={{ fontSize: 30, color: '#fff', }}>Login </Text> : null}
-				<View style={styles.inputcontainer}>
+				<View style={[styles.inputcontainer, { position: KeyboardIsShown ? 'absolute' : 'relative' }, (KeyboardIsShown ? { top: 100 } : null)]}>
 					<Text style={styles.label} >Platform Domain</Text>
 					<TextInput style={styles.textInput} onChangeText={(text) => { setPlatform(text) }} value={platform} placeholder='CIMNE' placeholderTextColor={'grey'} />
 					<Text style={styles.label} >Username</Text>
@@ -106,8 +108,9 @@ export default function Form({ navigation }: HomeProps) {
 					<Text style={styles.label} >Password</Text>
 					<TextInput style={styles.textInput} onChangeText={(text) => { setPassword(text) }} value={password} placeholder='········' placeholderTextColor={'grey'} secureTextEntry={true} />
 					<SendButton text='Sign In' width={100} handleSend={handleClick} />
+					<Text style={logInMessage ? { color: 'red', fontSize: 14, margin: 5, position: 'relative', textAlign: 'center' } : { display: 'none', }}>User name, password or platform domain are incorrect</Text>
+
 				</View>
-				<Text style={logInMessage ? { color: 'red', fontSize: 14, margin: 5, } : { display: 'none', }}>User name, password or platform domain are incorrect</Text>
 			</View>
 		</ImageBackground>
 

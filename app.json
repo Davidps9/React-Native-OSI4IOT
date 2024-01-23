@@ -4,12 +4,12 @@
     "slug": "osi4iot-app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/platformicon.png",
+    "icon": "./assets/secondIcon.png",
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "resizeMode": "cover",
+      "backgroundColor": "#000"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -23,7 +23,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/platformicon.png",
+        "foregroundImage": "./assets/secondIcon.png",
         "backgroundColor": "#000"
       },
       "permissions": [

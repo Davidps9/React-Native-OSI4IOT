@@ -1,11 +1,8 @@
 import { View } from "react-native";
-import HomeButton from "./HomeButton";
-import LogOutButton from "./LogOutButton";
-import { DefaultScreenProps, ParamList, ScreenNames } from "../../types";
+import { DefaultScreenProps } from "../../types";
 import styles from "../../Styles/styles";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-
-
+import LogOutButton from "./LogOutButton";
+import HomeButton from "./HomeButton";
 
 export default function HeaderComponent({ route, navigation }: DefaultScreenProps) {
     return (

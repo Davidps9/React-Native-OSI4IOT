@@ -1,6 +1,5 @@
 import * as Location from 'expo-location';
 import { Quaternion } from './utils/Threejs/Quaternion';
-
 export type Acceleration = [number, number, number];
 
 
