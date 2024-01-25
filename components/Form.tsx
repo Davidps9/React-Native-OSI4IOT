@@ -67,7 +67,7 @@ export default function Form({ navigation }: HomeProps) {
 			}).then(([responseJson, responseStatus]) => {
 				if (!responseJson?.accessToken) { return setLogin(true) }
 				setLogin(false);
-				AsyncStorage.setItem('loggedIn', JSON.stringify({ userName: responseJson.userName, password: password, userPlatform: platform, lastLog: new Date().getDate() }));
+				AsyncStorage.setItem('loggedIn', JSON.stringify({ userName: responseJson.userName, password: password, userPlatform: platform, lastLog: new Date().getDate(), accessToken: responseJson.accessToken }));
 				navigation.navigate('MainScreen', { userName: responseJson.userName, PlatformDomain: platform, accessToken: responseJson.accessToken, password: password })
 			}, (error) => {
 				console.log(error)
@@ -82,15 +82,16 @@ export default function Form({ navigation }: HomeProps) {
 	useEffect(() => {
 		AsyncStorage.getItem('loggedIn').then((value) => {
 			if (value) {
-				const { userName, password, userPlatform, lastLog } = JSON.parse(value);
-				if (new Date().getDate() - parseInt(lastLog) > 1) {
+				const { userName, password, userPlatform, lastLog, accessToken } = JSON.parse(value);
+				if (new Date().getDate() - parseInt(lastLog) > 1 || accessToken === '') {
 					AsyncStorage.clear();
 				}
-				else {
-					setName(userName);
-					setPassword(password);
-					setPlatform(userPlatform);
+				else if (accessToken !== '') {
+					navigation.navigate('MainScreen', { userName: userName, PlatformDomain: userPlatform, password: password, accessToken: accessToken })
+
 				}
+				console.log(accessToken)
+
 			}
 		})
 	}, [])
