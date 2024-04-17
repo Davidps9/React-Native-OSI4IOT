@@ -1,12 +1,10 @@
-import { Image, ImageBackground, ImageSourcePropType, Keyboard, TouchableOpacity } from 'react-native';
-import { Pressable, Text, TextInput, View } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { ParamList } from '../types';
-import styles from '../Styles/styles';
-import SendButton from './generics/SendButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { releaseChannel } from 'expo-updates';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import React, { useEffect, useState } from 'react';
+import { Image, ImageBackground, ImageSourcePropType, Keyboard, Text, TextInput, View } from 'react-native';
+import styles from '../Styles/styles';
+import { ParamList } from '../types';
+import SendButton from './generics/SendButton';
 
 const img_url: ImageSourcePropType = require('../assets/logo_large.png')
 const bg_url: ImageSourcePropType = require('../assets/osi4iot_fond.jpg')
@@ -14,11 +12,8 @@ type HomeProps = NativeStackScreenProps<ParamList, 'Home'>
 
 
 
-// Initialize Firebase
-
 export default function Form({ navigation }: HomeProps) {
 
-	// const auth = appAuth;
 
 	const [name, setName] = useState<string>('')
 	const [platform, setPlatform] = useState<string>('')
@@ -46,7 +41,7 @@ export default function Form({ navigation }: HomeProps) {
 	}, []);
 
 	const handleClick = () => {
-		if (name && password && platform !== '') {
+		if (name && password && platform !== '' && platform.endsWith('.com')) {
 
 			fetch('https://dicapuaiot.com/admin_api/auth/login', {
 
