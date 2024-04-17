@@ -4,5 +4,4 @@
 
 ### The app makes use of geolocation, accelerometer, quaterion, motion sensors sending data by mqtt
 
-<sub>Still have to check how to maintain the session open after closing the app</sub>
 
