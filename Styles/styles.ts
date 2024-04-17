@@ -46,6 +46,7 @@ const styles = StyleSheet.create({
   },
   button: {
     display: 'flex',
+    position: 'relative',
     alignItems: 'center',
     borderRadius: 20,
     backgroundColor: 'rgb(50,116,217)',
@@ -123,6 +124,21 @@ const styles = StyleSheet.create({
     borderColor: 'whitesmoke',
     width: 25,
     height: 25,
+  },
+  ErrorModal: {
+    position: 'relative',
+    display: 'flex',
+    top: 200,
+    left: 40,
+    width: '80%',
+    padding: 30,
+    gap: 20,
+    borderWidth: 2,
+    borderRadius: 20,
+    borderColor: 'rgb(50,116,217)',
+    backgroundColor: 'rgb(0,0,0)',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

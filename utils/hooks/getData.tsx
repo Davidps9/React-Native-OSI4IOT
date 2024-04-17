@@ -1,4 +1,4 @@
-import { SetStateAction, useEffect } from "react";
+import { SetStateAction } from "react";
 
 
 export const getData = ((setData: React.Dispatch<SetStateAction<any>>, url: string, accessToken: string) => {

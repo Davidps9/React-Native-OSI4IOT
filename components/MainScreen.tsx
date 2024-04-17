@@ -1,4 +1,4 @@
-import { Text, View, Image, ImageSourcePropType, Pressable, TouchableOpacity } from 'react-native';
+import { Text, View, Image, ImageSourcePropType, Pressable, TouchableOpacity, Modal } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { ParamList, Sensor, TopicType } from '../types';
 import styles from '../Styles/styles';
@@ -41,6 +41,7 @@ export default function MainScreen({ route, navigation }: MainScreenProps) {
     const [topics, setTopics] = useState<TopicType[]>([]);
 
     //mqtt states
+    const [mqttError, setMqttError] = useState<string | null>(null);
     const [connected, setConnected] = useState(false); // estado para saber si esta conectado o no
     const [groupHash, setGroupHash] = useState<string>('');
     const [topicHash, setTopicHash] = useState<string>('');
@@ -48,14 +49,14 @@ export default function MainScreen({ route, navigation }: MainScreenProps) {
     const [topicString, setTopicString] = useState<string>('');
     const [mqttClient, setMqttClient] = useState<Paho.Client | null>(null);
     function handleConnect() {
-        const url = 'dicapuaiot.com';
+        const url = route.params.PlatformDomain ? route.params.PlatformDomain : 'dicapuaiot.com';
         const clientId = 'mqttx_9147d94e';
         const client = new Paho.Client(url, Number(9001), clientId);
 
         client.connect({
             useSSL: true,
-            userName: route.params.userName,
-            password: route.params.password,
+            userName: `jwt_${route.params.userName}`,
+            password: route.params.accessToken,
 
             onSuccess: function () {
                 setConnected(true);
@@ -63,7 +64,7 @@ export default function MainScreen({ route, navigation }: MainScreenProps) {
             },
             onFailure: (error: any) => {
                 setConnected(false);
-                console.log(error)
+                setMqttError(error.errorMessage);
             },
 
         });
@@ -161,7 +162,6 @@ export default function MainScreen({ route, navigation }: MainScreenProps) {
 
             navigation.navigate('TimeSelectorScreen', { ...route.params, topic: topicString, client: mqttClient, sensor: selectedSensor })
         }
-
     }
 
     return (
@@ -169,13 +169,13 @@ export default function MainScreen({ route, navigation }: MainScreenProps) {
             <HeaderComponent route={route} navigation={navigation} />
 
             <View style={styles.container}>
-                <View style={styles.mqttConnected}>
+                <View style={mqttError == null ? styles.mqttConnected : { display: 'none', backgroundColor: '#000' }}>
                     {connected ? <Text style={styles.label}>Connected</Text> : <Text style={styles.label}>Not connected</Text>}
                     <View style={[styles.conectionDiv,
                     connected ? { backgroundColor: 'lime' } : { backgroundColor: 'red' }]}>
                     </View>
                 </View>
-                <View style={styles.inputcontainer}>
+                <View style={mqttError == null ? styles.inputcontainer : { display: 'none', backgroundColor: '#000' }}>
                     {topics != null ?
                         <>
                             <Text style={styles.textbutton} >Select Organization</Text>
@@ -207,6 +207,13 @@ export default function MainScreen({ route, navigation }: MainScreenProps) {
 
                 </View>
             </View>
+            <Modal visible={mqttError != null} transparent={true} animationType='slide'>
+                <View style={styles.ErrorModal}>
+                    <Text style={[styles.label, { textAlign: 'center' }]}>There was an error connecting to the server</Text>
+                    <SendButton text='Try logging in again' width={80} handleSend={() => navigation.navigate('Home', {})} />
+
+                </View>
+            </Modal>
         </>
     )
 }
