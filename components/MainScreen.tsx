@@ -142,11 +142,9 @@ export default function MainScreen({ route, navigation }: MainScreenProps) {
             case ChangedValue.Sensor:
                 localtopics.forEach((topic: TopicType) => {
                     if (topic.sensorType.includes(value) && selectedGroup == topic.groupAcronym && selectedMobileDevice == topic.assetDescription) {
-                        console.log('topic: ', topic);
                         setGroupHash(topic.groupUid);
                         setTopicHash(topic.topicUid);
                         setTopicType(topic.topicType);
-                        console.log('topic: ', topicString);
 
                     }
                 })
