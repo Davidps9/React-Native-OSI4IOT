@@ -52,6 +52,7 @@ export default function MainScreen({ route, navigation }: MainScreenProps) {
         const url = route.params.PlatformDomain ? route.params.PlatformDomain : 'dicapuaiot.com';
         const clientId = 'mqttx_9147d94e';
         const client = new Paho.Client(url, Number(9001), clientId);
+
         client.connect({
             useSSL: true,
             userName: `jwt_${route.params.userName}`,
@@ -71,6 +72,7 @@ export default function MainScreen({ route, navigation }: MainScreenProps) {
 
     useEffect(() => {
         getData(setTopics, `https://dicapuaiot.com/admin_api/topics_in_mobile/user_managed`, accessToken as string);
+
     }, [])
 
     useEffect(() => {
@@ -111,7 +113,6 @@ export default function MainScreen({ route, navigation }: MainScreenProps) {
     }, [selectedSensor])
 
     const SetValues = (changedValue: ChangedValue, value: string, localtopics: TopicType[], setNextValue: React.Dispatch<SetStateAction<string>> | null, compareValueArr?: Sensor[]) => {
-
         switch (changedValue) {
             case ChangedValue.OrganizationAcronym:
                 localtopics.forEach((topic: TopicType) => {
@@ -130,10 +131,11 @@ export default function MainScreen({ route, navigation }: MainScreenProps) {
             case ChangedValue.Device:
                 localtopics.forEach((topic: TopicType) => {
                     compareValueArr?.forEach((sensor: Sensor) => {
-                        if (compareValueArr != undefined && setNextValue != null && topic.sensorType.includes(sensor.sensorType.toLocaleLowerCase()) && selectedGroup == topic.groupAcronym) {
+                        if (compareValueArr != undefined && setNextValue != null && topic.sensorType.includes(selectedSensor) && selectedGroup == topic.groupAcronym) {
                             setNextValue(sensor.name);
                             setGroupHash(topic.groupUid);
                             setTopicHash(topic.topicUid);
+
                         }
                     });
                 });
@@ -144,6 +146,7 @@ export default function MainScreen({ route, navigation }: MainScreenProps) {
                         setGroupHash(topic.groupUid);
                         setTopicHash(topic.topicUid);
                         setTopicType(topic.topicType);
+
                     }
                 })
                 break;
@@ -154,7 +157,9 @@ export default function MainScreen({ route, navigation }: MainScreenProps) {
 
     const handleClick = () => {
 
-        if (mqttClient?.isConnected() && selectedSensor != 'Select an option') {
+        if (mqttClient?.isConnected() && selectedSensor != 'Select an option' && topicString.includes(topicHash)) {
+            console.log('topic: ', topicString);
+
             navigation.navigate('TimeSelectorScreen', { ...route.params, topic: topicString, client: mqttClient, sensor: selectedSensor })
         }
     }
