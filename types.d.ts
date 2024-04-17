@@ -40,7 +40,6 @@ export type Motion = [number, number, number, number, number, number, number];
 export type ScreenProps = {
 
     userName?: string,
-    password?: string,
     PlatformDomain?: string,
     accessToken?: string,
     topic?: string,

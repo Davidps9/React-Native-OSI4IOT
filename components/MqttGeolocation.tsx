@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text } from "react-native";
 import { Subscription } from "expo-sensors/build/Pedometer";
 import { ParamList, PayloadForLocation } from "../types";
 import Paho from "paho-mqtt";
 import styles from "../Styles/styles";
 import Header from "./generics/Header";
-import CancelButton from "./generics/CancelButton";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import *  as Location from 'expo-location';
-import SendButton from "./generics/SendButton";
 import Results from "./generics/Results";
 import InputFooter from "./generics/InputFooter";
+import getTimeStamp from "../utils/getTimeStamp";
+import { unsubscribe } from "../utils/unSubscribe";
 
 type HomeProps = NativeStackScreenProps<ParamList, 'MqttMessagerScreenForGeolocation'>
 
@@ -45,14 +45,14 @@ export default function MqttGeolocation({ navigation, route }: HomeProps) {
         })();
         setConnected(true);
         setTimeout(() => {
-            unsubscribe();
+            unsubscribe({ subscribtion, setSubscribtion });
         }, recordingTime * 1000);
 
     }
 
     useEffect(() => {
         if (connected) {
-            getTimestamp();
+            getTimeStamp(setTimestamp);
         }
     }, [location])
 
@@ -65,30 +65,15 @@ export default function MqttGeolocation({ navigation, route }: HomeProps) {
         client.send(message);
     }, [timestamp])
 
-    const unsubscribe = () => {
-        subscribtion && subscribtion.remove();
-        setSubscribtion(null);
-    }
-
-    function getTimestamp() {
-        const date = new Date();
-        setTimestamp(date.toJSON());
-    }
-
-
     return (
         <>
             <Header route={route} navigation={navigation} />
-
             <View style={styles.container} >
                 <Text style={styles.label}>Geolocation Coordinates</Text>
                 <View style={styles.textcontainer} >
                     <Results labels={["Latitude", "Longitude"]} data={[location.latitude, location.longitude]} fixed />
                     <InputFooter HomeProps={{ route, navigation }} handleSend={handleSend} />
-
-
                 </View>
-
             </View>
         </>
     );

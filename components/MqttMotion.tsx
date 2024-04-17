@@ -4,17 +4,16 @@ import { useEffect, useState } from 'react';
 import { Euler } from '../utils/Threejs/Euler';
 import { Quaternion } from '../utils/Threejs/Quaternion';
 import Paho from 'paho-mqtt';
-import { Acceleration, ParamList, PayloadForMotion, PayloadForQuaternion } from '../types';
+import { Acceleration, ParamList, PayloadForMotion } from '../types';
 import { DeviceMotion, DeviceMotionMeasurement } from 'expo-sensors';
 import { View, Text } from 'react-native';
 import styles from '../Styles/styles';
-import SendButton from './generics/SendButton';
-import CancelButton from './generics/CancelButton';
 import Header from './generics/Header';
 import getTimeStamp from '../utils/getTimeStamp';
 import getQuaternion from '../utils/getQuaternion';
 import Results from './generics/Results';
 import InputFooter from './generics/InputFooter';
+import { unsubscribe } from '../utils/unSubscribe';
 
 type HomeProps = NativeStackScreenProps<ParamList, 'MqttMessagerScreenForMotion'>
 
@@ -38,7 +37,7 @@ export default function MqttMotion({ navigation, route }: HomeProps) {
         DeviceMotion.addListener((DeviceMotionData: DeviceMotionMeasurement) => setValues(DeviceMotionData));
         setConnected(true);
         setTimeout(() => {
-            unsubscribe();
+            unsubscribe({ subscribtion, setSubscribtion });
             DeviceMotion.removeAllListeners();
         }, recordingTime * 1000);
     }
@@ -63,15 +62,10 @@ export default function MqttMotion({ navigation, route }: HomeProps) {
     }, [accel, euler])
 
 
-    const unsubscribe = () => {
-        subscribtion && subscribtion.remove();
-        setSubscribtion(null);
-    }
 
     return (
         <>
             <Header route={route} navigation={navigation} />
-
             <View style={styles.container} >
                 <Text style={styles.label}>Motion Data</Text>
                 <View style={[styles.textcontainer]} >
@@ -81,7 +75,6 @@ export default function MqttMotion({ navigation, route }: HomeProps) {
                     <View style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: 10 }}>
                         <Results labels={["X", "Y", "Z"]} data={accel} fixed />
                     </View>
-
                     <InputFooter HomeProps={{ route, navigation }} handleSend={handleSend} />
                 </View>
             </View>
