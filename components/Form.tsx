@@ -82,15 +82,16 @@ export default function Form({ navigation }: HomeProps) {
 	useEffect(() => {
 		AsyncStorage.getItem('loggedIn').then((value) => {
 			if (value) {
+
 				const { userName, password, userPlatform, lastLog, accessToken } = JSON.parse(value);
+
 				if (new Date().getDate() - parseInt(lastLog) > 1 || accessToken === '') {
 					AsyncStorage.clear();
 				}
-				else if (accessToken !== '') {
+				else if (accessToken !== '' && new Date().getDate() - parseInt(lastLog) < 1) {
 					navigation.navigate('MainScreen', { userName: userName, PlatformDomain: userPlatform, password: password, accessToken: accessToken })
 
 				}
-				console.log(accessToken)
 
 			}
 		})
