@@ -19,7 +19,6 @@ export default function Mqtt({ navigation, route }: HomeProps) {
     const [accel, setAccel] = useState<Acceleration>([0, 0, 0]);
     const client: Paho.Client = route.params.client;
     const recordingTime = route.params.recordingTime || 10;
-    const [timestamp, setTimestamp] = useState<string>();
     const [subscribtion, setSubscribtion] = useState<Subscription | null>(null);
     const payload: PayloadForAcceleration = ({ timestamp: '', mobile_accelerations: accel });
 
@@ -34,8 +33,7 @@ export default function Mqtt({ navigation, route }: HomeProps) {
 
     useEffect(() => {
         if (client.isConnected()) {
-            getTimeStamp(setTimestamp);
-            payload.timestamp = timestamp!;
+            payload.timestamp = getTimeStamp();
             payload.mobile_accelerations = accel;
             const message = new Paho.Message(JSON.stringify(payload));
             message.destinationName = route.params.topic as string;

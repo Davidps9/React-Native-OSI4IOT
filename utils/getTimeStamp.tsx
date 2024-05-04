@@ -1,5 +1,5 @@
 
-export default function getTimeStamp(setTimestamp: React.Dispatch<React.SetStateAction<string | undefined>>) {
+export default function getTimeStamp() {
     const date = new Date();
-    setTimestamp(date.toJSON());
+    return date.toJSON();
 }

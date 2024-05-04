@@ -22,21 +22,19 @@ export default function Mqtt({ navigation, route }: HomeProps) {
     const [subscribtion, setSubscribtion] = useState<Subscription | null>(null);
     const [euler, setEuler] = useState<Euler>(new Euler(0, 0, 0, 'YXZ'));
     const [quaternion, setQuaternion] = useState<Quaternion>(new Quaternion(0, 0, 0, 0));
-    const [connected, setConnected] = useState<boolean>(false);
     const samplingRate = route.params.sampleRate || 20;
     const client: Paho.Client = route.params.client;
-    const [timestamp, setTimestamp] = useState<string>();
 
     const payload: PayloadForQuaternion = ({ timestamp: '', mobile_quaternion: new Quaternion(0, 0, 0, 1) });
     const recordingTime = route.params.recordingTime || 10;
 
     const handleSend = () => {
-        DeviceMotion.setUpdateInterval(1000 / samplingRate); DeviceMotion.addListener((motion: DeviceMotionMeasurement) => {
+        DeviceMotion.setUpdateInterval(1000 / samplingRate);
+        DeviceMotion.addListener((motion: DeviceMotionMeasurement) => {
             if (motion?.rotation) {
                 setEuler(new Euler(motion.rotation.beta as number, motion.rotation.gamma as number, motion.rotation.alpha as number, 'ZXY'))
             }
         })
-        setConnected(true);
         setTimeout(() => {
             unsubscribe({ subscribtion, setSubscribtion });
             DeviceMotion.removeAllListeners();
@@ -44,10 +42,9 @@ export default function Mqtt({ navigation, route }: HomeProps) {
     }
 
     useEffect(() => {
-        if (connected) {
-            getQuaternion(euler, setQuaternion);
-            getTimeStamp(setTimestamp);
-            payload.timestamp = timestamp as string;
+        if (client.isConnected()) {
+            setQuaternion(getQuaternion(euler)!);
+            payload.timestamp = getTimeStamp();
             payload.mobile_quaternion = quaternion;
             const message = new Paho.Message(JSON.stringify(payload));
             message.destinationName = route.params.topic as string;

@@ -27,7 +27,6 @@ export default function MqttMotion({ navigation, route }: HomeProps) {
     const [connected, setConnected] = useState<boolean>(false);
     const samplingRate = route.params.sampleRate || 20;
     const client: Paho.Client = route.params.client;
-    const [timestamp, setTimestamp] = useState<string>();
 
     const payload: PayloadForMotion = ({ timestamp: '', mobile_motion: [0, 0, 0, quaternion._x, quaternion._y, quaternion._z, quaternion._w] });
     const recordingTime = route.params.recordingTime || 10;
@@ -51,9 +50,8 @@ export default function MqttMotion({ navigation, route }: HomeProps) {
 
     useEffect(() => {
         if (connected && accel) {
-            getQuaternion(euler, setQuaternion);
-            getTimeStamp(setTimestamp);
-            payload.timestamp = timestamp as string;
+            setQuaternion(getQuaternion(euler)!);
+            payload.timestamp = getTimeStamp() as string;
             payload.mobile_motion = [accel[0] as number, accel[1] as number, accel[2] as number, quaternion._x, quaternion._y, quaternion._z, quaternion._w];
             const message = new Paho.Message(JSON.stringify(payload));
             message.destinationName = route.params.topic as string;

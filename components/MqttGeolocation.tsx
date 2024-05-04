@@ -52,7 +52,7 @@ export default function MqttGeolocation({ navigation, route }: HomeProps) {
 
     useEffect(() => {
         if (connected) {
-            getTimeStamp(setTimestamp);
+            setTimestamp(getTimeStamp());
         }
     }, [location])
 
