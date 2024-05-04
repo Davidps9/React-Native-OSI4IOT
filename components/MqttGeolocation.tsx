@@ -58,8 +58,8 @@ export default function MqttGeolocation({ navigation, route }: HomeProps) {
 
     useEffect(() => {
         payload.timestamp = timestamp as string;
-        payload.longitude = location.latitude;
-        payload.latitude = location.longitude;
+        payload.longitude = location.longitude;
+        payload.latitude = location.latitude;
         const message = new Paho.Message(JSON.stringify(payload));
         message.destinationName = route.params.topic as string;
         client.send(message);
