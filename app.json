@@ -11,6 +11,11 @@
       "resizeMode": "cover",
       "backgroundColor": "#000"
     },
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
     "assetBundlePatterns": [
       "**/*"
     ],
