@@ -180,7 +180,7 @@ export default function MainScreen({ route, navigation }: MainScreenProps) {
                         <>
                             <Text style={styles.textbutton} >Select Organization</Text>
                             <OptionsPicker options={topics} setSelectedValue={setSelectedOrganization} _label={selectedOrganization} valueType={optionKeys.orgAcronym} />
-                            <Text style={styles.textbutton} >Select group</Text>
+                            <Text style={styles.textbutton} >Select Group</Text>
                             <OptionsPicker options={topics} setSelectedValue={setSelectedGroup} _label={selectedGroup} valueType={optionKeys.groupAcronym} compareValue={selectedOrganization} />
                             <Text style={styles.textbutton} >Select Asset</Text>
                             <OptionsPicker options={topics} setSelectedValue={setSelectedMobileDevice} _label={selectedMobileDevice} valueType={optionKeys.assetUid} compareValue={selectedGroup} />
