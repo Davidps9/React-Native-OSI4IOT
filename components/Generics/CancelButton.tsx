@@ -1,5 +1,5 @@
 import { Text, TouchableOpacity } from "react-native"
-import styles from "../../styles/styles"
+import styles from "../../Styles/styles"
 import { DefaultScreenProps } from "../../types"
 
 

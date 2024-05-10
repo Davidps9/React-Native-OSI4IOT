@@ -5,7 +5,7 @@ import { DeviceMotion } from "expo-sensors";
 import { Subscription } from "expo-sensors/build/Pedometer";
 import Paho from "paho-mqtt";
 import { View, Text } from "react-native";
-import styles from "../styles/styles";
+import styles from "../Styles/styles";
 import Header from "./generics/Header";
 import getTimeStamp from "../utils/getTimeStamp";
 import Results from "./generics/Results";

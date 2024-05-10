@@ -2,7 +2,7 @@ import React, { SetStateAction, useEffect, useState } from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { ParamList } from '../types';
 import { LogBox, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import styles from '../styles/styles';
+import styles from '../Styles/styles';
 import HeaderComponent from './generics/Header';
 import CancelButton from './generics/CancelButton';
 import SendButton from './generics/SendButton';
