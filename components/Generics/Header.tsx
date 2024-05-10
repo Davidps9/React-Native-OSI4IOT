@@ -1,6 +1,6 @@
 import { View } from "react-native";
 import { DefaultScreenProps } from "../../types";
-import styles from "../../Styles/styles";
+import styles from "../../styles/styles";
 import LogOutButton from "./LogOutButton";
 import HomeButton from "./HomeButton";
 

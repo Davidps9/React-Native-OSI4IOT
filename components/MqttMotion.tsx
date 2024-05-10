@@ -7,7 +7,7 @@ import Paho from 'paho-mqtt';
 import { Acceleration, ParamList, PayloadForMotion } from '../types';
 import { DeviceMotion, DeviceMotionMeasurement } from 'expo-sensors';
 import { View, Text } from 'react-native';
-import styles from '../Styles/styles';
+import styles from '../styles/styles';
 import Header from './generics/Header';
 import getTimeStamp from '../utils/getTimeStamp';
 import getQuaternion from '../utils/getQuaternion';

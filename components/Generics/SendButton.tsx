@@ -1,5 +1,5 @@
 import { TouchableOpacity, Text, TouchableOpacityProps } from "react-native";
-import styles from "../../Styles/styles";
+import styles from "../../styles/styles";
 
 
 type SendButtonProps = {

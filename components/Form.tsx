@@ -3,7 +3,7 @@ import { Text, TextInput, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { ParamList } from '../types';
-import styles from '../Styles/styles';
+import styles from '../styles/styles';
 import SendButton from './generics/SendButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 

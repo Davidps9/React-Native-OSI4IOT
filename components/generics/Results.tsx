@@ -1,5 +1,5 @@
 import { Text } from "react-native"
-import styles from "../../Styles/styles"
+import styles from "../../styles/styles"
 
 export default function Results({ data, labels, fixed }: { data: number[], labels: string[], fixed?: boolean }) {
     return (

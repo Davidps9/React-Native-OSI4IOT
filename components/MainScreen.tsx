@@ -1,7 +1,7 @@
 import { Text, View, Image, ImageSourcePropType, Pressable, TouchableOpacity, Modal } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { ParamList, Sensor, TopicType } from '../types';
-import styles from '../Styles/styles';
+import styles from '../styles/styles';
 import { Accelerometer, DeviceMotion, Gyroscope } from 'expo-sensors';
 import Paho from 'paho-mqtt';
 import { SetStateAction, useEffect, useState } from 'react';

@@ -1,5 +1,5 @@
 import { Text, View } from "react-native"
-import styles from "../Styles/styles";
+import styles from "../styles/styles";
 import Paho from 'paho-mqtt';
 import { useEffect, useState } from "react";
 import { DeviceMotion, DeviceMotionMeasurement } from "expo-sensors";

@@ -1,7 +1,7 @@
 import { Text, View, Pressable } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { ParamList, ScreenNames } from '../../types';
-import styles from '../../Styles/styles';
+import styles from '../../styles/styles';
 import Icon from 'react-native-ico-material-design';
 type HomeProps = NativeStackScreenProps<ParamList, "Home">
 

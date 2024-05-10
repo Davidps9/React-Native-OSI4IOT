@@ -3,7 +3,7 @@ import { View, Text } from "react-native";
 import { Subscription } from "expo-sensors/build/Pedometer";
 import { ParamList, PayloadForLocation } from "../types";
 import Paho from "paho-mqtt";
-import styles from "../Styles/styles";
+import styles from "../styles/styles";
 import Header from "./generics/Header";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import *  as Location from 'expo-location';
