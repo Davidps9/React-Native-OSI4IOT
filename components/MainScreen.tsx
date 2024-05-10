@@ -5,7 +5,7 @@ import styles from '../Styles/styles';
 import { Accelerometer, DeviceMotion, Gyroscope } from 'expo-sensors';
 import Paho from 'paho-mqtt';
 import { SetStateAction, useEffect, useState } from 'react';
-import { getData } from '../utils/hooks/getData';
+import { getData } from '../utils/getData';
 import OptionsPicker, { optionKeys } from './generics/OptionsPicker';
 import { Picker } from '@react-native-picker/picker';
 import HeaderComponent from './generics/Header';
