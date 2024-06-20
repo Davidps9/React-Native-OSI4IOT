@@ -59,12 +59,7 @@ export default function OptionsPicker({ _label, options, setSelectedValue, value
         setFiltered(true);
 
     }
-    // useEffect(() => {
-    //     console.log('selectedOption: ', selectedOption)
-    //     setSelectedValue(selectedOption)
 
-
-    // }, [selectedOption])
 
     useEffect(() => {
         setSelectedOptions(_label);

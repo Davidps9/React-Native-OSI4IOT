@@ -40,9 +40,8 @@ export default function MainScreen({ route, navigation }: MainScreenProps) {
 
     const [topics, setTopics] = useState<TopicType[]>([]);
 
-    //mqtt states
     const [mqttError, setMqttError] = useState<string | null>(null);
-    const [connected, setConnected] = useState(false); // estado para saber si esta conectado o no
+    const [connected, setConnected] = useState(false);
     const [groupHash, setGroupHash] = useState<string>('');
     const [topicHash, setTopicHash] = useState<string>('');
     const [topicType, setTopicType] = useState<string>('dev2pdb_wt');
