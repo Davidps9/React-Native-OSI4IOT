@@ -53,13 +53,13 @@ export type ScreenProps = {
     client?: any,
     distanceInterval?: number,
 }
-type DigitalTwinProps = {
-    index: number,
-    digitalTwin: object,
-    angle: number,
-    navigation: NativeStackScreenProps<ParamList, ScreenNames>,
-    route: NativeStackScreenProps<ParamList, ScreenNames>
-}
+// type DigitalTwinProps = {
+//     index: number,
+//     digitalTwin: object,
+//     angle: number,
+//     navigation: NativeStackScreenProps<ParamList, ScreenNames>,
+//     route: NativeStackScreenProps<ParamList, ScreenNames>
+// }
 
 type DefaultScreenProps = NativeStackScreenProps<ParamList, ScreenNames>
 
